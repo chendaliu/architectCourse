@@ -1,4 +1,4 @@
-package com.czl.architectCourse.jvm;
+package com.czl.architect.jvm;
 
 import java.util.ArrayList;
 import java.util.List;
