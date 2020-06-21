@@ -22,11 +22,12 @@ public class NIOServer {
         // 创建一个选择器selector
         Selector selector = Selector.open();
         // 把ServerSocketChannel注册到selector上，并且selector对客户端accept连接操作感兴趣
-        ssc.register(selector, SelectionKey.OP_ACCEPT);
+        SelectionKey selectionKey = ssc.register(selector, SelectionKey.OP_ACCEPT);
 
         while (true) {
             System.out.println("等待事件发生。。");
             // 轮询监听channel里的key，select是阻塞的，accept()也是阻塞的
+            // select()轮询channel里有哪些事件发生，把事件注册到selector里
             int select = selector.select();
 
             System.out.println("有事件发生了。。");
