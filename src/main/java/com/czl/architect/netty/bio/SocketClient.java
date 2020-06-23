@@ -1,26 +1,20 @@
 package com.czl.architect.netty.bio;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 public class SocketClient {
-    public static void main(String[] args) {
-        try (Socket clientSocket = new Socket("127.0.0.1",9000);
-             OutputStream outputStream = clientSocket.getOutputStream();
-             InputStream inputStream = clientSocket.getInputStream()) {
-            outputStream.write("HellowServer".getBytes());
-            byte[] bytes = new byte[1024];
-            int read = inputStream.read(bytes);
-            if (read != -1) {
-                System.out.println("收到服务端消息：" + new String(bytes, 0, read));
-            }
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+    public static void main(String[] args) throws IOException {
+        Socket socket = new Socket("127.0.0.1", 9000);
+        //向服务端发送数据
+        socket.getOutputStream().write("HelloServer".getBytes());
+        socket.getOutputStream().flush();
+        System.out.println("向服务端发送数据结束");
+        byte[] bytes = new byte[1024];
+        //接收服务端回传的数据
+        socket.getInputStream().read(bytes);
+        System.out.println("接收到服务端的数据：" + new String(bytes));
+        socket.close();
     }
 }
