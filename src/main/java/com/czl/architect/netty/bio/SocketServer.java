@@ -12,17 +12,13 @@ public class SocketServer {
             //阻塞方法
             Socket socket = serverSocket.accept();
             System.out.println("有客户端连接了。。");
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        handler(socket);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            new Thread(() -> {
+                try {
+                    handler(socket);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }).start();
-            //handler(socket);
 
         }
     }
