@@ -8,6 +8,12 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
+/**
+ * 1.创建SocketChannel
+ * 2.channel与服务器建立连接
+ * 3.获取Selector
+ * 4.循环监听selector.select()，第2步建立连接后这里会监听到连接
+ */
 public class NioClient {
     //通道管理器
     private Selector selector;

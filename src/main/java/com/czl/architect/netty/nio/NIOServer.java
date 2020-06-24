@@ -9,6 +9,15 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
+/**
+ * Channel可以说是最基础的门面，它是本地I/O设备、网络I/O的通信桥梁，只有搭建了这座桥梁，数据才能被写入Buffer，连接才能被Selector控制
+ *
+ * 1.创建ServerSocketChannel
+ * 2.获取Selector
+ * 3.把ServerSocketChannel注册到Selector
+ * 4.轮询监听selector.select()事件
+ * 5.有事件了获取SelectionKey，SelectionKey可以获取事件类型和SocketChannel
+ */
 public class NIOServer {
 
     //public static ExecutorService pool = Executors.newFixedThreadPool(10);
