@@ -1,7 +1,5 @@
 package com.czl.architect.jvm;
 
-import com.sun.nio.zipfs.ZipPath;
-
 /**
  * @Title: 测试双亲委派机制
  * @Description:
@@ -12,14 +10,9 @@ import com.sun.nio.zipfs.ZipPath;
 public class TestDelegate {
     public static void main(String[] args) {
         try {
-            Class clazz = ClassLoader.getSystemClassLoader().loadClass(com.architect.jvm.TestDynamicLoad.class.getName());
+            //这里不能用String类测试，因为在启动过程中已经加载过String。这里用Applet测试，Applet也是一个位于jre/lib文件夹下面的类
+            Class clazz = ClassLoader.getSystemClassLoader().loadClass(java.applet.Applet.class.getName());
             System.out.println(clazz.getClassLoader());
-
-            Class zipClazz = ClassLoader.getSystemClassLoader().loadClass(ZipPath.class.getName());
-            System.out.println(zipClazz.getClassLoader());
-
-            Class strClazz = ClassLoader.getSystemClassLoader().loadClass(String.class.getName());
-            System.out.println(strClazz.getClassLoader());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
