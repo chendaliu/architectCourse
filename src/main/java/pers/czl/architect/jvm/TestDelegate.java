@@ -1,4 +1,4 @@
-package pers.czl.architect.jvm;
+package com.czl.architect.jvm;
 
 /**
  * @Title: 测试双亲委派机制
@@ -10,8 +10,9 @@ package pers.czl.architect.jvm;
 public class TestDelegate {
     public static void main(String[] args) {
         try {
-            Class clazz = ClassLoader.getSystemClassLoader().loadClass(TestJdkClassLoader.class.getName());
-            System.out.println(clazz);
+            //这里不能用String类测试，因为在启动过程中已经加载过String。这里用Applet测试，Applet也是一个位于jre/lib文件夹下面的类
+            Class clazz = ClassLoader.getSystemClassLoader().loadClass(java.applet.Applet.class.getName());
+            System.out.println(clazz.getClassLoader());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
