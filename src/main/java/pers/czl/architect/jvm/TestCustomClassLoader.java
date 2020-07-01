@@ -1,4 +1,4 @@
-package com.czl.architect.jvm;
+package pers.czl.architect.jvm;
 
 import java.io.FileInputStream;
 import java.lang.reflect.Method;
@@ -15,7 +15,7 @@ public class TestCustomClassLoader {
     public static void main(String[] args) throws Exception {
         final String classPath = "D:/classPath";
         CustomClassLoader customClassLoader = new CustomClassLoader(classPath);
-        Class clazz = customClassLoader.loadClass("com.czl.architect.jvm.HelloJvm");
+        Class clazz = customClassLoader.loadClass("pers.czl.architect.jvm.HelloJvm");
         Method sayHello = clazz.getDeclaredMethod("sayHello");
         Object obj = clazz.newInstance();
         sayHello.invoke(obj);

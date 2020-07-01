@@ -1,4 +1,4 @@
-package com.czl.architect.jvm;
+package pers.czl.architect.jvm;
 
 import sun.misc.Launcher;
 

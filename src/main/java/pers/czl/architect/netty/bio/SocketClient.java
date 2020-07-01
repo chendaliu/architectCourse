@@ -1,4 +1,4 @@
-package com.czl.architect.netty.bio;
+package pers.czl.architect.netty.bio;
 
 import java.io.IOException;
 import java.net.Socket;

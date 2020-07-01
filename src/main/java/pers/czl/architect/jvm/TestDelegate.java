@@ -1,4 +1,4 @@
-package com.czl.architect.jvm;
+package pers.czl.architect.jvm;
 
 /**
  * @Title: 测试双亲委派机制
@@ -10,7 +10,7 @@ package com.czl.architect.jvm;
 public class TestDelegate {
     public static void main(String[] args) {
         try {
-            Class clazz = ClassLoader.getSystemClassLoader().loadClass(com.czl.architect.jvm.TestJdkClassLoader.class.getName());
+            Class clazz = ClassLoader.getSystemClassLoader().loadClass(TestJdkClassLoader.class.getName());
             System.out.println(clazz);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

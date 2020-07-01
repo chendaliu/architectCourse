@@ -1,4 +1,4 @@
-package com.czl.architect.jvm;
+package pers.czl.architect.jvm;
 
 import java.io.FileInputStream;
 import java.lang.reflect.Method;
@@ -17,7 +17,7 @@ public class TestNoDetegate {
 
     public static void main(String[] args) throws Exception {
         MyClassLoader myClassLoader = new MyClassLoader("D:/classPath");
-        Class clazz = myClassLoader.loadClass("com.czl.architect.jvm.HelloJvm");
+        Class clazz = myClassLoader.loadClass("pers.czl.architect.jvm.HelloJvm");
         Object obj = clazz.newInstance();
         Method method = clazz.getDeclaredMethod("sayHello");
         method.invoke(obj);

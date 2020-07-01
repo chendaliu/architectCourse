@@ -1,4 +1,4 @@
-package com.czl.architect.netty;
+package pers.czl.architect.netty;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
