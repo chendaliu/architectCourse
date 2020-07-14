@@ -1,0 +1,19 @@
+@startuml
+start
+:浏览器输入: localhost:8080/test/index.do;
+:请求发送到本机端口8080;
+:被tomcat的Connector HTTP/1.1 监听并获得请求;
+:【Connector】把请求交给service对应的Engine;
+:【Engine】匹配到域名为localhost的Host;
+note left:如果是其他匹配不到的域名，也会用默认的localhost
+:【Host】获得请求/test/index.do，匹配到路径为/test的Context;
+note left:如果匹配不到就把请求交给路径为""的Context去处理
+:【Context】:获得请求/index.do，在它的mapping table中找到对应的Servlet;
+:【Servlet】:构造HttpServletRequest和HttpServletResponse对象，作为参数调用Servlet的doGet和doPost;
+:执行业务逻辑;
+:Context把执行完之后的HttpServletResponse返回给Host;
+:Host把HttpServletResponse返回给Engine;
+:Engine把HttpServletResponse返回给Connector;
+:Connector把HttpServletResponse返回给客户端;
+end
+@enduml

@@ -1,0 +1,19 @@
+@startuml
+actor User
+User->Connector: 浏览器输入:\nlocalhost:8080/test/index.do
+Connector->Connector: 监听并获得请求
+Connector->Service: 把请求交给service对应的Engine
+Service->Engine:Service负责匹配Connector \n对应的Engine
+Engine->Host: 匹配到域名为localhost的Host
+Host->Context: 匹配到路径为/test的Context
+Context->Servlet:匹配到请求为/index.do的Servlet
+Servlet->Servlet:构造HttpServletRequest和HttpServletResponse对象
+Servlet->Servlet:调用doGet和doPost执行业务逻辑
+
+Servlet-->Context:返回执行完成的HttpServletResponse
+Context-->Host:返回HttpServletResponse
+Host-->Engine:返回HttpServletResponse
+Engine-->Service:返回HttpServletResponse
+Service-->Connector:返回HttpServletResponse
+Connector-->User:返回HttpServletResponse
+@enduml

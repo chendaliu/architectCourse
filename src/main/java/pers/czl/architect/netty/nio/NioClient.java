@@ -48,7 +48,7 @@ public class NioClient {
         //用channel.finishConnect() 才能完成连接
         channel.connect(new InetSocketAddress(ip, port));
         //将通道管理器和该通道绑定，并为该通道注册SelectionKey.OP_CONNECT事件。
-        channel.register(selector, SelectionKey.OP_CONNECT);
+        SelectionKey selectionKey = channel.register(selector, SelectionKey.OP_CONNECT);
     }
 
     /**
