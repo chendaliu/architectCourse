@@ -1,0 +1,9 @@
+@startuml
+|无锁态|
+start
+:只有一个线程获取锁;
+|偏向锁|
+:升级为偏向锁;
+note:在mark down记录锁线程id;
+stop
+@enduml
