@@ -1,0 +1,30 @@
+@startuml
+|无锁状态|
+start
+:仅1个线程执行同步块;
+
+if(检查Mark Word是否为偏向锁) then (是)
+    if(检查Mark Word线程id是否为当前线程id) then (是)
+    |偏向锁|
+    :执行同步代码块;
+    stop;
+    else (不是)
+        :通过CAS操作竞争锁;
+        note right:CAS置换Mark Down的线程id
+        if(竞争是否成功) then (是)
+            :将Mark Word的线程id\n替换为当前线程id;
+            :执行同步代码块;
+            stop;
+        else(失败)
+        endif
+    endif
+    :升级为轻量级锁;
+    note:竞争失败说明有多个线程\n竞争锁，会升级为轻量级锁
+
+elseif (检查Mark Word是否为轻量级锁) then (是)
+endif
+
+
+
+
+@enduml
