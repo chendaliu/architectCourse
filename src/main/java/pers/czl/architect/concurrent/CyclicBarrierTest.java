@@ -47,7 +47,7 @@ public class CyclicBarrierTest {
             }
         });
 
-        for(int i = 0; i < threadNum; i++) {
+        for (int i = 0; i < threadNum; i++) {
             new TaskThread(barrier).start();
         }
     }
