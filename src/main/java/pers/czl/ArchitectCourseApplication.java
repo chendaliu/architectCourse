@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.convert.converter.Converter;
 
 import java.sql.SQLException;
-import java.util.function.Consumer;
 
 @SpringBootApplication
 public class ArchitectCourseApplication {
