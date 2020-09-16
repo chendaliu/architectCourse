@@ -1,4 +1,4 @@
-package pers.czl.architect.facade;
+package pers.czl.architect.designpattern.facade;
 
 /**
  * @Title: 挂号
