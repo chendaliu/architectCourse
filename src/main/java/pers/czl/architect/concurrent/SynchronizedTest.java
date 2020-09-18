@@ -1,5 +1,6 @@
 package pers.czl.architect.concurrent;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -11,6 +12,9 @@ import java.util.concurrent.TimeUnit;
  **/
 public class SynchronizedTest {
     public static void main(String[] args) throws InterruptedException {
+        HashMap map = new HashMap();
+        map.put(1, 1);
+
         Thread t1 = new Thread() {
             @Override
             public void run() {
