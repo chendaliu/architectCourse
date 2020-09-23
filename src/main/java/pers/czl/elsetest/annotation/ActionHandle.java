@@ -1,4 +1,4 @@
-package pers.czl.elsetest.dynamicProxy.annotation;
+package pers.czl.elsetest.annotation;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -24,7 +24,7 @@ public class ActionHandle {
 			}
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		//测试自定义注解处理器
 		Dog dg = new Dog();
@@ -38,6 +38,6 @@ public class ActionHandle {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+
 }

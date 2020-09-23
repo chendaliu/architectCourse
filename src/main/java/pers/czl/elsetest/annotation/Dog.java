@@ -1,4 +1,4 @@
-package pers.czl.elsetest.dynamicProxy.annotation;
+package pers.czl.elsetest.annotation;
 
 public class Dog {
     @Action
