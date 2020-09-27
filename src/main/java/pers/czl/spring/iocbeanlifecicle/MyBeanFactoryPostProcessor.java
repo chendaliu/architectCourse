@@ -23,7 +23,7 @@ public class MyBeanFactoryPostProcessor implements BeanDefinitionRegistryPostPro
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-        RootBeanDefinition rootBeanDefinition = (RootBeanDefinition) beanFactory.getBeanDefinition("car");
-        System.out.println(rootBeanDefinition);
+        /*RootBeanDefinition rootBeanDefinition = (RootBeanDefinition) beanFactory.getBeanDefinition("car");
+        System.out.println(rootBeanDefinition);*/
     }
 }
