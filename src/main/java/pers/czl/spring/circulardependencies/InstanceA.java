@@ -35,8 +35,8 @@ public class InstanceA implements IApi {
         System.out.println("InstanceA实例化");
     }
 
-	@Override
-	public void say() {
-		System.out.println("I'm A");
-	}
+    @Override
+    public void say() {
+        System.out.println("I'm A");
+    }
 }
