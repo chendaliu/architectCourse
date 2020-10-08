@@ -18,4 +18,8 @@ public class Tank {
     public void setName(String name) {
         this.name = name;
     }
+
+    private void destroy() {
+        System.out.println();
+    }
 }

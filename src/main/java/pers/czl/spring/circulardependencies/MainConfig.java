@@ -8,7 +8,7 @@ import org.springframework.context.annotation.*;
 @Configuration
 @ComponentScan(basePackages = {"pers.czl.spring.circulardependencies"})
 //@ImportResource(value = {"classpath:beans/beans.xml"})
-@EnableAspectJAutoProxy
+//@EnableAspectJAutoProxy
 public class MainConfig {
 
 
