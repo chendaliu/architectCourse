@@ -9,7 +9,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  * Created by xsls on 2019/6/10.
  */
 @Configuration
-@EnableAspectJAutoProxy   /*<aop:aspectj-autoproxy/>*/
+@EnableAspectJAutoProxy   //<aop:aspectj-autoproxy/>
 //(exposeProxy = true) //(proxyTargetClass = true)
 @ComponentScan("pers.czl.spring.aop")
 public class MainConfig {

@@ -2,18 +2,21 @@ package pers.czl;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.core.convert.converter.Converter;
 
 import java.sql.SQLException;
 
 @SpringBootApplication
-public class ArchitectCourseApplication extends SpringBootServletInitializer {
+public class  ArchitectCourseApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) throws SQLException {
-        Converter<String, Integer> converter = Integer::valueOf;
-        converter.convert("1");
-        SpringApplication.run(ArchitectCourseApplication.class, args);
+        SpringApplication.run(ArchitectCourseApplication.class);
+    }
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(ArchitectCourseApplication.class);
     }
 
 /*    private static ThreadLocal<DateFormat> threadLocal = new ThreadLocal<DateFormat>() {
