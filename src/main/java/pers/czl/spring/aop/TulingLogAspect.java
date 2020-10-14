@@ -25,7 +25,10 @@ public class TulingLogAspect {
     @Pointcut("execution(* pers.czl.spring.aop.TulingCalculate.*(..))")
     public void pointCut(){};
 
-    @Before(value = "pointCut()")
+    @Pointcut("execution(* pers.czl.spring.aop.Dog.*(..))")
+    public void pointCut2(){};
+
+    @Before(value = "pointCut() || pointCut2()")
     public void methodBefore(JoinPoint joinPoint) throws Throwable {
         String methodName = joinPoint.getSignature().getName();
         System.out.println("执行目标方法【"+methodName+"】的<前置通知>,入参"+ Arrays.asList(joinPoint.getArgs()));

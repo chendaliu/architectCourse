@@ -18,6 +18,9 @@ public class TulingMainClass {
 
         ProgramCalculate pcalculate = (ProgramCalculate) ctx.getBean("tulingCalculate");
         System.out.println(pcalculate.toBinary(100));
+
+        Dog dog = (Dog) ctx.getBean("dog");
+        dog.say();
     }
 
 }
