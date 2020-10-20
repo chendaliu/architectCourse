@@ -2,22 +2,26 @@ package pers.czl;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 
 import java.sql.SQLException;
 
 @SpringBootApplication
-public class  ArchitectCourseApplication extends SpringBootServletInitializer {
+@ComponentScan(excludeFilters =
+        {
+                @ComponentScan.Filter(type = FilterType.REGEX, pattern = "pers.czl.spring.*")
+        })
+public class ArchitectCourseApplication { //extends SpringBootServletInitializer {
 
     public static void main(String[] args) throws SQLException {
         SpringApplication.run(ArchitectCourseApplication.class);
     }
 
-    @Override
+   /* @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(ArchitectCourseApplication.class);
-    }
+    }*/
 
 /*    private static ThreadLocal<DateFormat> threadLocal = new ThreadLocal<DateFormat>() {
         @Override
