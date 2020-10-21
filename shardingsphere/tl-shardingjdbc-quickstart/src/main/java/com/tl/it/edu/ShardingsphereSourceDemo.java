@@ -1,14 +1,11 @@
 package com.tl.it.edu;
 
-import lombok.extern.slf4j.Slf4j;
-/*
-import ch.qos.logback.core.net.SyslogOutputStream;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shardingsphere.api.config.sharding.KeyGeneratorConfiguration;
 import org.apache.shardingsphere.api.config.sharding.ShardingRuleConfiguration;
 import org.apache.shardingsphere.api.config.sharding.TableRuleConfiguration;
 import org.apache.shardingsphere.api.config.sharding.strategy.HintShardingStrategyConfiguration;
-import org.apache.shardingsphere.api.config.sharding.strategy.InlineShardingStrategyConfiguration;
 import org.apache.shardingsphere.api.config.sharding.strategy.StandardShardingStrategyConfiguration;
 import org.apache.shardingsphere.api.hint.HintManager;
 import org.apache.shardingsphere.api.sharding.hint.HintShardingAlgorithm;
@@ -22,9 +19,12 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
-*/
 
 /**
  *                  ,;,,;
@@ -45,28 +45,28 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class ShardingsphereSourceDemo {
 
-    /*public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException {
         // 配置真实数据源
         Map<String, DataSource> dataSourceMap = new ConcurrentHashMap<>(2);//为两个数据库的datasource
 
         // 配置第一个数据源
         HikariDataSource dataSource0 = new HikariDataSource();
         dataSource0.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource0.setJdbcUrl("jdbc:mysql://192.168.241.198:3306/shop_ds_0?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8");
+        dataSource0.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/shop_ds_0?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8");
         dataSource0.setUsername("root");
-        dataSource0.setPassword("root");
+        dataSource0.setPassword("123456");
         dataSourceMap.put("ds0", dataSource0);
 
 
         // 配置第二个数据源
         HikariDataSource dataSource1 = new HikariDataSource();
         dataSource1.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource1.setJdbcUrl("jdbc:mysql://192.168.241.198:3306/shop_ds_1?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8");
+        dataSource1.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/shop_ds_1?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8");
         dataSource1.setUsername("root");
-        dataSource1.setPassword("root");
+        dataSource1.setPassword("123456");
         dataSourceMap.put("ds1", dataSource1);
 
-        *//****************分片表组装************//*
+        /****************分片表组装************/
         // 配置分片规则
         ShardingRuleConfiguration shardingRuleConfig = new ShardingRuleConfiguration();
         shardingRuleConfig.getTableRuleConfigs().add(getOrderTableRuleConfiguration());
@@ -74,11 +74,13 @@ public class ShardingsphereSourceDemo {
         //绑定表
         shardingRuleConfig.getBindingTableGroups().add("t_order, t_order_item");
 
-        *//****************分片具体规则************//*
+        /****************分片具体规则************/
         //datanode为数据分片最小单元
         // 配置分库策略
         //我们采用数据库的分片是用user_id user_id %2 主要定位数据库库
         //shardingRuleConfig.setDefaultDatabaseShardingStrategyConfig(new InlineShardingStrategyConfiguration("user_id", "ds$->{user_id % 2}"));
+
+        //分片规则：强制查询ds0，跟下面的selectRange里的HintManager搭配使用
         shardingRuleConfig.setDefaultDatabaseShardingStrategyConfig(
                 new HintShardingStrategyConfiguration(new HintShardingAlgorithm<Integer>() {
                     @Override
@@ -119,17 +121,18 @@ public class ShardingsphereSourceDemo {
 
         //-------------测试部分-----------------//
         ShardingsphereSourceDemo test = new ShardingsphereSourceDemo();
+
         //test.drop(dataSource);
         //test.create(dataSource);
         //插入数据
-        //test.insertData(dataSource);
-        //test.selectRange(dataSource);
+        test.insertData(dataSource);
+        test.selectRange(dataSource);
         test.selectPageList(dataSource);
     }
 
-    *//**
+    /**
      * t_order分表规则配置,主键采用雪花算法
-     *//*
+     */
     private static TableRuleConfiguration getOrderTableRuleConfiguration() {
         TableRuleConfiguration orderTableRuleConfig = new TableRuleConfiguration("t_order",
                 "ds${0..1}.t_order_${[0, 1]}");
@@ -138,9 +141,9 @@ public class ShardingsphereSourceDemo {
         return orderTableRuleConfig;
     }
 
-    *//**
+    /**
      * t_order_item分表规则配置,主键采用雪花算法
-     *//*
+     */
     private static TableRuleConfiguration getOrderItemTableRuleConfiguration() {
         TableRuleConfiguration orderItemTableRuleConfig = new TableRuleConfiguration("t_order_item",
                 "ds${0..1}.t_order_item_${[0, 1]}");
@@ -157,11 +160,11 @@ public class ShardingsphereSourceDemo {
         return props;
     }
 
-    *//***
+    /***
      * 用户为中心10 和11 偶数和奇数
      * @param dataSource
      * @throws SQLException
-     *//*
+     */
     public void insertData(DataSource dataSource) throws SQLException {
         for (int i = 1; i < 10; i++) {
             long orderId = executeAndGetGeneratedKey(dataSource, "INSERT INTO t_order (user_id, address_id, status) VALUES (10,10, 'INIT')");
@@ -238,7 +241,7 @@ public class ShardingsphereSourceDemo {
 
 
 
-    *//**-----------------------------表初始化--------------------------------*//*
+    /**-----------------------------表初始化--------------------------------*//*
     public void drop(DataSource dataSource) throws SQLException {
         execute(dataSource, "DROP TABLE IF EXISTS t_order");
         execute(dataSource, "DROP TABLE IF EXISTS t_order_item;");
