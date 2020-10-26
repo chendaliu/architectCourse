@@ -1,5 +1,6 @@
 package com.tuling.mapper;
 
+import com.tuling.entity.Address;
 import com.tuling.entity.User;
 import java.util.List;
 
@@ -8,7 +9,9 @@ import java.util.List;
  * @Slogan 致敬大师，致敬未来的你
  */
 public interface UserMapper {
-    User selectById(Long id);
+    User selectById(Integer id);
 
-    List<User> selectAllUser();
+    int insert(User user);
+
+    int insertAddress(Address address);
 }
