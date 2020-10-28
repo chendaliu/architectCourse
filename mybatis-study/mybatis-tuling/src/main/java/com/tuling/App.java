@@ -1,5 +1,6 @@
 package com.tuling;
 
+import com.github.pagehelper.PageHelper;
 import com.tuling.entity.User;
 import com.tuling.mapper.UserMapper;
 import org.apache.ibatis.io.Resources;
@@ -9,7 +10,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.List;
 
 /***
  * @Author 徐庶   QQ:1092002729
@@ -28,17 +28,15 @@ public class App {
             SqlSession session = sqlMapper.openSession();
             try {
                 // 执行查询 底层执行jdbc
-                User user = (User)session.selectOne("com.tuling.mapper.UserMapper.selectById", 1);
-
-                /*UserMapper mapper = session.getMapper(UserMapper.class);
-                System.out.println(mapper.getClass());
-                User user = mapper.selectById(1L);*/
-                //session.commit();
+                //User user = (User)session.selectOne("com.tuling.mapper.UserMapper.selectById", 1);
+                PageHelper.startPage(1, 10);
+                UserMapper userMapper = session.getMapper(UserMapper.class);
+                User user = userMapper.selectById(1);
                 System.out.println(user.getName());
             } catch (Exception e) {
                 e.printStackTrace();
             }finally {
-                //session.close();
+                session.close();
             }
         } catch (IOException e) {
             e.printStackTrace();

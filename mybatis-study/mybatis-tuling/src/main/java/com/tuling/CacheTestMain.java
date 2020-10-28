@@ -1,8 +1,6 @@
 package com.tuling;
 
-import com.tuling.entity.Address;
 import com.tuling.entity.User;
-import com.tuling.mapper.AddressMapper;
 import com.tuling.mapper.UserMapper;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
