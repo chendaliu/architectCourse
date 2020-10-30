@@ -35,7 +35,7 @@ public class App {
                 System.out.println(user.getName());
             } catch (Exception e) {
                 e.printStackTrace();
-            }finally {
+            } finally {
                 session.close();
             }
         } catch (IOException e) {

@@ -23,6 +23,7 @@ public class DemoApplication {
     public ApplicationRunner getBean() {
         return args -> {
             System.out.println(userService.getUser(1));
+            System.out.println("========================");
         };
     }
 }
