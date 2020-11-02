@@ -12,7 +12,7 @@ import java.net.UnknownHostException;
 
 public class Agent {
     private static Agent ourInstance = new Agent();
-    private String server = "192.168.0.149:2181";
+    private String server = "118.25.53.252:2181";
     private ZkClient zkClient;
     private static final String rootPath = "/tuling-manger";
     private static final String servicePath = rootPath + "/service";
