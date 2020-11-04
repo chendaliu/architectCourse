@@ -1,5 +1,6 @@
 package com.tuling.dubbo;
 
+import com.tuling.client.UserService;
 import org.apache.dubbo.config.*;
 
 import java.io.IOException;
@@ -26,10 +27,10 @@ public class DubboServer {
         protocolConfig.setSerialization("fastjson");
         protocolConfig.setPort(-1);//20880
         RegistryConfig registryConfig
-                = new RegistryConfig("zookeeper://192.168.0.147:2181");
+                = new RegistryConfig("zookeeper://118.25.53.252:2181");
 
         ServiceConfig serviceConfig = new ServiceConfig();
-        serviceConfig.setInterface("com.tuling.client.UserService");
+        serviceConfig.setInterface(UserService.class);
         serviceConfig.setRef(new UserServiceImpl());
         serviceConfig.setRegistry(registryConfig);
         serviceConfig.setProtocol(protocolConfig);

@@ -23,9 +23,10 @@ public class DubboClient {
 
     public static void main(String[] args) throws IOException {
         RegistryConfig registryConfig
-                = new RegistryConfig("zookeeper://192.168.0.147:2181"); // 虚拟的注册中心 局域网
+                = new RegistryConfig("zookeeper://118.25.53.252:2181"); // 虚拟的注册中心 局域网
         ApplicationConfig applicationConfig
                 = new ApplicationConfig("young-app");
+        applicationConfig.setQosHost("33333");
         UserService userService1, userService2, userService3;
         {
             ReferenceConfig referenceConfig = new ReferenceConfig();
