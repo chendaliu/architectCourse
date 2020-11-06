@@ -1,0 +1,3 @@
+black = com.tuling.dubbo.test.spi.impl.BlackCar
+red = com.tuling.dubbo.test.spi.impl.RedCar
+com.tuling.dubbo.test.spi.impl.CarWrapper
