@@ -11,10 +11,10 @@ import org.apache.rocketmq.remoting.exception.RemotingException;
 import java.io.UnsupportedEncodingException;
 
 /**
- * @author ：图灵-杨过
+ * @author ：
  * @date：2019/9/24
  * @version: V1.0
- * @slogan: 天下风云出我辈，一入代码岁月催
+ * @slogan:
  * @description :
  */
 public class SyncProducer {

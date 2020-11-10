@@ -10,10 +10,10 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author ：图灵-杨过
+ * @author ：
  * @date：2019/9/24
  * @version: V1.0
- * @slogan: 天下风云出我辈，一入代码岁月催
+ * @slogan:
  * @description :
  */
 public class AsyncProducer {

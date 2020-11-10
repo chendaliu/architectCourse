@@ -15,10 +15,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * @author ：图灵-杨过
+ * @author ：
  * @date：2019/9/29
  * @version: V1.0
- * @slogan: 天下风云出我辈，一入代码岁月催
+ * @slogan:
  * @description :
  */
 public class OrderedConsumer {

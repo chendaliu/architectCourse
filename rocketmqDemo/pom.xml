@@ -14,4 +14,23 @@
         <module>tl-springboot-rocketmq-consumer</module>
     </modules>
 
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.3.2</version>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                        <encoding>utf8</encoding>
+                        <compilerArgument>-XDignore.symbol.file=true -Xlint</compilerArgument>
+                        <testCompilerArgument>-XDignore.symbol.file=true -Xlint</testCompilerArgument>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+    
 </project>
