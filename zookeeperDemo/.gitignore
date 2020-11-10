@@ -9,3 +9,4 @@
 .mvn/
 *.cmd
 mvnw
+.gitignore
