@@ -1,7 +1,7 @@
-package pers.czl.architect.designpattern.bradge;
+package pers.czl.architect.designpattern.bridge;
 
 /**
- * @Title:
+ * @Title: 桥接模式
  * @Description:
  * @Author: wb-ccl670938
  * @CreateTime: 2020-09-16 16:52

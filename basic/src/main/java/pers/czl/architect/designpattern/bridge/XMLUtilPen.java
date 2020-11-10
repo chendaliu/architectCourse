@@ -1,4 +1,4 @@
-package pers.czl.architect.designpattern.bradge;
+package pers.czl.architect.designpattern.bridge;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;

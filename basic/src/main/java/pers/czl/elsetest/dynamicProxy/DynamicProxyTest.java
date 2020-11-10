@@ -6,17 +6,16 @@ import java.lang.reflect.Method;
 public class DynamicProxyTest {
 
 	public static void main(String[] args) {
-		/*BookService cgBookService = new JdkDynamicProxy(new BookServiceImpl()).getProxy();
-		cgBookService.buyBook();*/
+		DynamicProxyTest dynamicProxyTest = new DynamicProxyTest();
 
-		//BookService cgBookService1 = new JdkDynamicProxy(BookService.class.getName()).getProxy();
-		BookServiceImpl cgBookService1 = CGLibDynamicProxy.getInstance().getProxy(BookServiceImpl.class);
+		BookService bookService = dynamicProxyTest.testJdk();
 
-		System.out.println("我们得到的bean是：" + cgBookService1.getClass());
-		System.out.println("实际调用者的父类：" + cgBookService1.getClass().getSuperclass());
-		cgBookService1.buyBook();
+		System.out.println("我们得到的bean是：" + bookService.getClass());
+		System.out.println("实际调用者的父类：" + bookService.getClass().getSuperclass());
+
+		bookService.buyBook();
 		try {
-			Class<?> c = Class.forName(cgBookService1.getClass().getName());
+			Class<?> c = Class.forName(bookService.getClass().getName());
 			Class<?> beanc = Class.forName("com.czl.daliu.test.dynamicProxy.BookServiceImpl");
 			
 			Method[] beanc_method = beanc.getMethods();
@@ -41,5 +40,15 @@ public class DynamicProxyTest {
             e.printStackTrace();
         }
     }*/
+
+	private BookService testJdk() {
+		BookService cgBookService = new JdkDynamicProxy(new BookServiceImpl()).getProxy();
+		cgBookService.buyBook();
+
+		System.out.println("我们得到的bean是：" + cgBookService.getClass());
+		System.out.println("实际调用者的父类：" + cgBookService.getClass().getSuperclass());
+		cgBookService.buyBook();
+		return cgBookService;
+	}
     
 }

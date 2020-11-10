@@ -1,4 +1,4 @@
-package pers.czl.architect.designpattern.bradge;
+package pers.czl.architect.designpattern.bridge;
 
 /**
  * @Title:
