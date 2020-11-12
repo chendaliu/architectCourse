@@ -32,7 +32,7 @@ public class Consumer {
 
     public static void main(String[] args) throws InterruptedException, MQClientException, IOException {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("ConsumerGroupNamecc4");
-        consumer.setNamesrvAddr("192.168.241.198:9876");
+        consumer.setNamesrvAddr("118.25.53.252:9876");
 
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         File classFile = new File(classLoader.getResource("MessageFilterImpl.java").getFile());
@@ -41,14 +41,9 @@ public class Consumer {
         consumer.subscribe("TopicFilter7", "org.apache.rocketmq.example.filter.MessageFilterImpl",
             filterCode);
 
-        consumer.registerMessageListener(new MessageListenerConcurrently() {
-
-            @Override
-            public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs,
-                                                            ConsumeConcurrentlyContext context) {
-                System.out.printf("%s Receive New Messages: %s %n", Thread.currentThread().getName(), msgs);
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-            }
+        consumer.registerMessageListener((MessageListenerConcurrently) (msgs, context) -> {
+            System.out.printf("%s Receive New Messages: %s %n", Thread.currentThread().getName(), msgs);
+            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
         });
 
         consumer.start();

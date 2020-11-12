@@ -21,7 +21,7 @@ public class BroadcastConsumer {
 
     public static void main(String[] args) throws Exception {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("consumer_model_group");
-        consumer.setNamesrvAddr("192.168.241.198:9876");
+        consumer.setNamesrvAddr("118.25.53.252:9876");
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         //广播,全量消费
         consumer.setMessageModel(MessageModel.CLUSTERING);

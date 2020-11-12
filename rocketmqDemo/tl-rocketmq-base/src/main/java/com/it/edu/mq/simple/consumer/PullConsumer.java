@@ -24,7 +24,7 @@ public class PullConsumer {
 
     public static void main(String[] args) throws MQClientException {
         DefaultMQPullConsumer consumer = new DefaultMQPullConsumer("tl_message_group");
-        consumer.setNamesrvAddr("192.168.241.198:9876");
+        consumer.setNamesrvAddr("118.25.53.252:9876");
         consumer.start();
 
         Set<MessageQueue> mqs = consumer.fetchSubscribeMessageQueues("TopicStudent");

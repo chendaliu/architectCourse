@@ -22,20 +22,16 @@ public class TransactionConsumer {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("transaction_group");
 
         // ;192.168.241.199:9876
-        consumer.setNamesrvAddr("192.168.241.198:9876");
+        consumer.setNamesrvAddr("118.25.53.252:9876");
 
         consumer.subscribe("TopicTransaction", "*");
 
-        consumer.registerMessageListener(new MessageListenerConcurrently() {
-            @Override
-            public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs,
-                                                            ConsumeConcurrentlyContext context) {
-                for (MessageExt msg : msgs){
-                    System.out.println("开始提交消费端本地事务.....");
-                    System.out.println(new String(msg.getBody()));
-                }
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+        consumer.registerMessageListener((MessageListenerConcurrently) (msgs, context) -> {
+            for (MessageExt msg : msgs) {
+                System.out.println("开始提交消费端本地事务.....");
+                System.out.println(new String(msg.getBody()));
             }
+            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
         });
 
         consumer.start();

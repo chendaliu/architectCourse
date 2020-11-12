@@ -22,7 +22,7 @@ public class Consumer {
         // tl_msg_student_group
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("tl_student_group");
         // ;192.168.241.199:9876
-        consumer.setNamesrvAddr("192.168.241.198:9876;192.168.241.199:9876");
+        consumer.setNamesrvAddr("118.25.53.252:9876;192.168.241.199:9876");
 
         // Subscribe one more more topics to consume.
         consumer.subscribe("TopicStudent", "*");

@@ -24,7 +24,7 @@ public class SyncProducer {
         DefaultMQProducer producer = new
                 DefaultMQProducer("tl_msg_student_group");
 
-        producer.setNamesrvAddr("192.168.241.198:9876");
+        producer.setNamesrvAddr("118.25.53.252:9876");
         //producer.setSendMsgTimeout(10000);
 
         producer.start();

@@ -24,7 +24,7 @@ public class BatchProducer {
          * 对msg进行拆分
          */
         DefaultMQProducer producer = new DefaultMQProducer("batch_group");
-        producer.setNamesrvAddr("192.168.241.198:9876");
+        producer.setNamesrvAddr("118.25.53.252:9876");
         producer.start();
 
         String topic = "BatchTest";

@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class OrderedConsumer {
     public static void main(String[] args) throws Exception {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("ordered_group_name");
-        consumer.setNamesrvAddr("192.168.241.198:9876");
+        consumer.setNamesrvAddr("118.25.53.252:9876");
         /**
          * 设置消费位置
          */

@@ -25,7 +25,7 @@ public class FilterConsumer {
         /**
          * 注册中心
          */
-        consumer.setNamesrvAddr("192.168.241.198:9876;192.168.241.199:9876");
+        consumer.setNamesrvAddr("118.25.53.252:9876;192.168.241.199:9876");
         /**
          * 订阅主题
          * 一种资源去换取另外一种资源
@@ -34,21 +34,17 @@ public class FilterConsumer {
         /**
          * 注册监听器，监听主题消息
          */
-        consumer.registerMessageListener(new MessageListenerConcurrently() {
-            @Override
-            public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs,
-                                                            ConsumeConcurrentlyContext context) {
-                for (MessageExt msg : msgs){
-                    try {
-                        System.out.println("consumeThread=" + Thread.currentThread().getName()
-                                + ", queueId=" + msg.getQueueId() + ", content:"
-                                + new String(msg.getBody(), RemotingHelper.DEFAULT_CHARSET));
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
+        consumer.registerMessageListener((MessageListenerConcurrently) (msgs, context) -> {
+            for (MessageExt msg : msgs){
+                try {
+                    System.out.println("consumeThread=" + Thread.currentThread().getName()
+                            + ", queueId=" + msg.getQueueId() + ", content:"
+                            + new String(msg.getBody(), RemotingHelper.DEFAULT_CHARSET));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
                 }
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
+            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
         });
         consumer.start();
 

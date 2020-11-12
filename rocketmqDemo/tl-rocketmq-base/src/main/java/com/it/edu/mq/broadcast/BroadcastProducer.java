@@ -16,7 +16,7 @@ public class BroadcastProducer {
 
     public static void main(String[] args) throws Exception {
         DefaultMQProducer producer = new DefaultMQProducer("consumer_model_group");
-        producer.setNamesrvAddr("192.168.241.198:9876;192.168.241.199:9876");
+        producer.setNamesrvAddr("118.25.53.252:9876;192.168.241.199:9876");
         producer.start();
 
         for (int i = 0; i < 4; i++){
