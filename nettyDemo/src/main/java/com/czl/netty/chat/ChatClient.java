@@ -39,7 +39,7 @@ public class ChatClient {
                 channel.writeAndFlush(msg);
             }*/
             for (int i = 0; i < 200; i++) {
-                channel.writeAndFlush("hello，诸葛!");
+                channel.writeAndFlush("hello，client!");
             }
         } finally {
             group.shutdownGracefully();
