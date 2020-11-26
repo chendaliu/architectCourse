@@ -9,6 +9,17 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
+/**
+ * selector+selectionKey(SocketChannel+selector)可监听连接、读、写
+ * 1.服务端：启动，新建ServerSocketChannel，注册到selector，生成selectionKey(ServerSocketChannel+selector)，负责监听连接事件。
+ * 2.客户端：启动，新建SocketChannel和selector，然后与服务端端口建立连接。
+ * 3.服务端：selector监听到连接，取出第1步的selectionKey，取到ServerSocketChannel，用ServerSocketChannel新建一个SocketChannel，注册到selector负责监听读操作。
+ * 4.客户端：建立连接成功后，把SocketChannel注册到客户端的selector，生成selectionKey，负责监听连接事件。
+ * 5.客户端：监听到第4步连接成功。取出第4步新建的selectionKey，取出SocketChannel，向该Channel写入"HelloServer"，并把该Channel注册到selector，负责监听读事件。
+ * 6.服务端：第3步中监听读事件的selector，监听到第5步客户端的事件。从selector中取出channel（第3步中的那个channel），从通道中读取到数据"HelloServer"。然后向通道写数据"HelloClient"。
+ * 7.客户端：第5步中最后负责监听的selector，监听到第6步中服务端的数据，收到"HelloClient"。客户端完成，客户端的selector继续轮询事件。
+ * 8.服务端：监听到第6步中自己的写事件，取到channel，取消监听写事件，只监听读事件。
+ */
 public class NettyServer {
 
     public static void main(String[] args) throws Exception {
