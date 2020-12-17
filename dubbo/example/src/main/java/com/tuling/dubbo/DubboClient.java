@@ -26,7 +26,7 @@ public class DubboClient {
                 = new RegistryConfig("zookeeper://118.25.53.252:2181"); // 虚拟的注册中心 局域网
         ApplicationConfig applicationConfig
                 = new ApplicationConfig("young-app");
-        applicationConfig.setQosHost("33333");
+        applicationConfig.setQosPort(33333);
         UserService userService1, userService2, userService3;
         {
             ReferenceConfig referenceConfig = new ReferenceConfig();
