@@ -41,7 +41,7 @@ public class MySimpleJobConfig {
 
     private static LiteJobConfiguration createSimpleJobConfiguration() {
         // 定义作业核心配置
-        JobCoreConfiguration simpleCoreConfig = JobCoreConfiguration.newBuilder("SimpleJobDemo", "0/5 * * * * ?", 4)
+        JobCoreConfiguration simpleCoreConfig = JobCoreConfiguration.newBuilder("SimpleJobDemo", "0/5 * * * * ?", 5)
                 .shardingItemParameters("0=背景,1=上海,2=广州,3=深圳").build();
         // 定义SIMPLE类型配置
         SimpleJobConfiguration simpleJobConfig = new SimpleJobConfiguration(simpleCoreConfig, MySimpleJob.class.getCanonicalName());
