@@ -29,16 +29,16 @@ public class MySimpleJob implements SimpleJob {
         //不同分片项进行不同处理
         switch (shardingItem) {
             case 0:
-                System.out.println("第1个分片项参数：" + shardingParameter);
+                System.out.println("物流分发至：" + shardingParameter);
                 break;
             case 1:
-                System.out.println("第2个分片项参数：" + shardingParameter);
+                System.out.println("物流分发至：" + shardingParameter);
                 break;
             case 2:
-                System.out.println("第3个分片项参数：" + shardingParameter);
+                System.out.println("物流分发至：" + shardingParameter);
                 break;
             case 3:
-                System.out.println("第4个分片项参数：" + shardingParameter);
+                System.out.println("物流分发至：" + shardingParameter);
                 break;
         }
 

@@ -11,13 +11,10 @@ import com.dangdang.ddframe.job.reg.zookeeper.ZookeeperRegistryCenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 import pers.czl.elasticjob.job.MySimpleJob;
 
-import java.net.InetAddress;
-
 /**
- * @Title:
+ * @Title: 作业配置类
  * @Description:
  * @Author: wb-ccl670938
  * @CreateTime: 2020-12-17 17:18
@@ -41,8 +38,8 @@ public class MySimpleJobConfig {
 
     private static LiteJobConfiguration createSimpleJobConfiguration() {
         // 定义作业核心配置
-        JobCoreConfiguration simpleCoreConfig = JobCoreConfiguration.newBuilder("SimpleJobDemo", "0/5 * * * * ?", 5)
-                .shardingItemParameters("0=背景,1=上海,2=广州,3=深圳").build();
+        JobCoreConfiguration simpleCoreConfig = JobCoreConfiguration.newBuilder("SimpleJobDemo", "0/5 * * * * ?", 4)
+                .shardingItemParameters("0=北京,1=上海,2=广州,3=深圳").build();
         // 定义SIMPLE类型配置
         SimpleJobConfiguration simpleJobConfig = new SimpleJobConfiguration(simpleCoreConfig, MySimpleJob.class.getCanonicalName());
         // 定义Lite作业根配置

@@ -6,8 +6,9 @@ import org.springframework.stereotype.Service;
 public class StockService {
 
 	public String deductStock(Long productId, Integer stockCount) {
-		System.out.println("商品productId=" + productId + "：扣减库存" + stockCount);
-		return "success";
+		String str = "商品productId=" + productId + "：扣减库存" + stockCount;
+		System.out.println(str);
+		return str;
 	}
 
 }

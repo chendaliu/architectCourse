@@ -22,6 +22,11 @@ public class StockController {
         return stockService.deductStock(productId, stockCount);
     }
 
+    @GetMapping("/get/{stockId}")
+    public String getStock(@PathVariable("stockId") Long stockId) {
+        return "stockId:" + stockId + ">>ip and port:" + getIpAndPort();
+    }
+
     @GetMapping("/getIpAndPort")
     public String getIpAndPort() {
         return registration.getHost() + ":" + registration.getPort();

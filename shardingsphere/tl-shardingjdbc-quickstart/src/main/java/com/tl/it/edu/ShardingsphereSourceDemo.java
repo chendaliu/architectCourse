@@ -45,6 +45,17 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class ShardingsphereSourceDemo {
 
+    /**
+     * @Description:
+     * 一.配置数据源
+     * 二.配置表分片规则
+     * 三.
+     * @Param:
+     * @Return:
+     * @Author: wb-ccl670938
+     * @Date: 2020/12/21
+     * @Version V1.0
+    **/
     public static void main(String[] args) throws SQLException {
         // 配置真实数据源
         Map<String, DataSource> dataSourceMap = new ConcurrentHashMap<>(2);//为两个数据库的datasource
