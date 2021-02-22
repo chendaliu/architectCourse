@@ -1,11 +1,12 @@
-package com.daliu.order.ribbon;
+package com.daliu.ribbon;
 
 import com.netflix.loadbalancer.IRule;
 import com.netflix.loadbalancer.RoundRobinRule;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @Title:
+ * @Title: 轮询
  * @Description:
  * @Author: wb-ccl670938
  * @CreateTime: 2021-02-22 19:36
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RibbonRoundRobinRule {
 
+    @Bean(name = "roundRobinRule")
     public IRule roundRobinRule() {
         return new RoundRobinRule();
     }

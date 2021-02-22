@@ -1,5 +1,6 @@
-package com.daliu.order.ribbon;
+package com.daliu.order.config;
 
+import com.daliu.ribbon.WeightRule;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.cloud.netflix.ribbon.RibbonClients;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +15,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @RibbonClients(value = {
         //轮询
-        @RibbonClient(name="credit-service", configuration = RibbonRoundRobinRule.class),
+        //@RibbonClient(name="credit-service", configuration = com.daliu.ribbon.RibbonRoundRobinRule.class),
         //随机
-        @RibbonClient(name="stock-service", configuration = RibbonRandomRule.class)
+        //@RibbonClient(name="stock-service", configuration = com.daliu.ribbon.RibbonRandomRule.class)
+        //权重
+        @RibbonClient(name="credit-service", configuration = WeightRule.class)
 })
 public class RibbonConfig {
 

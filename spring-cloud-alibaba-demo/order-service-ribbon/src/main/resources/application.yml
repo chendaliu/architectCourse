@@ -10,3 +10,33 @@ spring:
       discovery:
         # 指定nacos server的地址
         server-addr: 127.0.0.1:8848
+
+
+#credit-service:
+#  ribbon:
+    #配置负载均衡：轮询
+    #NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule
+    #配置负载均衡：权重
+    #NFLoadBalancerRuleClassName: com.daliu.order.myrule.WeightRule
+#配置负载均衡：随机
+#stock-service:
+#  ribbon:
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+
+#开启ribbon饥饿加载,解决微服务调用第一次很慢的情况下
+ribbon:
+  eager-load:
+    enabled: true
+    #可以指定多个微服务用逗号分隔
+    clients: credit-service,stock-service
+  #每一台服务器重试的次数，不包含首次调用的那一次
+  MaxAutoRetries: 1
+  #重试的服务器的个数，不包含首次调用的那一台实例
+  MaxAutoRetriesNextServer: 2
+  #是否对所以的操作进行重试(True 的话 会对post put操作进行重试，存在服务幂等问题)
+  OkToRetryOnAllOperations: true
+  #建立连接超时
+  ConnectTimeout: 3000
+  #读取数据超时
+  ReadTimeout: 3000
+  #Ribbon详细配置:http://c.biancheng.net/view/5356.html
