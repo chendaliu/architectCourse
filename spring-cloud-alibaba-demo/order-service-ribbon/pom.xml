@@ -11,7 +11,7 @@
     <groupId>com.zhuge</groupId>
     <artifactId>order-service-ribbon</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>order-service</name>
+    <name>order-service-ribbon</name>
     <description>Demo project order</description>
 
     <properties>
