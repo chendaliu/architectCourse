@@ -18,4 +18,21 @@ logging:
       daliu:
         order:
           api:
-            feign: debug
+            feign: basic
+
+feign:
+  client:
+    config:
+      product-center:
+        loggerLevel: basic
+        contract: feign.Contract.Default
+  httpclient:
+    #让feign底层使用HttpClient去调用，这样才会使用连接池，否则的话使用url连接，这时候没用连接池
+    enabled: true
+    max-connections: 200
+    max-connections-per-route: 50
+    connection-timeout: 3000
+
+ribbon:
+  connectTimeout: 2000
+  readTimeout: 2000

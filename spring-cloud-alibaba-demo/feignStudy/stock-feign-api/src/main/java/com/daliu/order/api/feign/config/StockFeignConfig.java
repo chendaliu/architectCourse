@@ -1,7 +1,9 @@
 package com.daliu.order.api.feign.config;
 
+import com.daliu.handler.StockRequestInterceptor;
 import feign.Contract;
 import feign.Logger;
+import feign.RequestInterceptor;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -20,10 +22,21 @@ public class StockFeignConfig {
      * 根据SpringBoot自动装配FeignClientsConfiguration 的FeignClient的契约是SpringMvc
      *
      * 通过修改契约为默认的Feign的锲约，那么就可以使用Feign默认的注解
+     *
+     * 不推荐这种用法
+     * @return
+     */
+/*    @Bean
+    public Contract feiContract() {
+        return new Contract.Default();
+    }*/
+
+    /**
+     * 验证token的拦截器
      * @return
      */
     @Bean
-    public Contract feiContract() {
-        return new Contract.Default();
+    public RequestInterceptor requestInterceptor() {
+        return new StockRequestInterceptor();
     }
 }

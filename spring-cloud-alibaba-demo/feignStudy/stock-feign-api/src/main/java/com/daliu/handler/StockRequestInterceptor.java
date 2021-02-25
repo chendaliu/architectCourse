@@ -1,20 +1,16 @@
 package com.daliu.handler;
 
+import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.UUID;
 
 /**
  * @Title:
- * @Description:
- * @Author: Daliu
- * @CreateTime: 2021-02-25 01:03
- * @Version:1.0
  **/
-public class RequestInterceptor implements feign.RequestInterceptor {
+public class StockRequestInterceptor implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate template) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
