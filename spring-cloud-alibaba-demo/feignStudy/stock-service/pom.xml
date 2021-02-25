@@ -8,7 +8,7 @@
 		<version>2.1.5.RELEASE</version>
 		<relativePath/>
 	</parent>
-	<groupId>com.zhuge</groupId>
+	<groupId>com.daliu</groupId>
 	<artifactId>stock-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>stock-service</name>

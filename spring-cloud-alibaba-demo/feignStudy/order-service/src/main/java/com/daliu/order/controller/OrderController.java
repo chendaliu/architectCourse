@@ -1,6 +1,7 @@
 package com.daliu.order.controller;
 
-import com.daliu.order.feign.StockService;
+
+import com.daliu.order.api.feign.stock.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +21,7 @@ public class OrderController {
      */
     @GetMapping(value = "/getStock")
     public String getStock(@RequestParam("stockId") Long stockId) {
-        stockService.getStock(stockId);
-        return "success";
+        return stockService.getStock(stockId);
     }
 
 }
