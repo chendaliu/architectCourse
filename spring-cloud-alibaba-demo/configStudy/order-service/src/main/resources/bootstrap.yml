@@ -1,0 +1,25 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        file-extension: yml
+        #不同微服务的公共配置文件
+        shared-dataids: common.yml,common2.yml
+        #支持动态刷新的配置文件，跟shared-dataids搭配使用，其他配置默认支持动态刷新
+        refreshable-dataids: common.yml,common2.yml
+
+        ext-config:
+          - data-id: common3.yml
+            group: DEFAULT_GROUP
+            refresh: true
+          - data-id: common4.yml
+            group: DEFAULT_GROUP
+            refresh: true
+      discovery:
+        # 指定nacos server的地址
+        server-addr: 127.0.0.1:8848
+  application:
+    name: order-service
+  profiles:
+    active: dev
