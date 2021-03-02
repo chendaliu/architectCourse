@@ -3,6 +3,7 @@ package com.daliu.order.controller;
 import com.daliu.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -116,6 +117,7 @@ public class OrderController {
      * @param a
      * @return
      */
+    @PostMapping
     public String fallbackMethod(String a) {
         return "发生异常了";
     }
