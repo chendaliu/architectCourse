@@ -4,12 +4,16 @@ server:
 spring:
   application:
     name: order-service
-
   cloud:
     nacos:
       discovery:
         # 指定nacos server的地址
         server-addr: 127.0.0.1:8848
+    sentinel:
+      transport:
+        dashboard: 127.0.0.1:9848
+#      filter:
+#        enabled: false
 
 #指定FeignClientApi的日志级别，不设置为debug不会打印日志
 logging:
@@ -36,3 +40,14 @@ feign:
 ribbon:
   connectTimeout: 2000
   readTimeout: 2000
+
+#actuator 暴露所有端口 配置上，就能访问http://127.0.0.1:1002/actuator/sentinel
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      #
+      show-details: always

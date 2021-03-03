@@ -1,0 +1,15 @@
+server:
+  port: 3002
+
+spring:
+  application:
+    name: stock-service
+
+  cloud:
+    nacos:
+      discovery:
+        # 指定nacos server的地址
+        server-addr: 127.0.0.1:8848
+    sentinel:
+      transport:
+        dashboard: 127.0.0.1:9848
