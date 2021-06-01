@@ -14,6 +14,12 @@ import java.util.function.Supplier;
  **/
 public class FunctionTest {
 
+    /**
+     * Consumer  有参无返回
+     * Supplier  无参有返回
+     * Function  有参有返回
+     * Predicate 有参返回bool
+     **/
     public static void main(String[] args) {
 
         // test Consumer 消费
