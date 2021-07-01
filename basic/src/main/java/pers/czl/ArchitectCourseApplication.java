@@ -6,6 +6,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 
 @SpringBootApplication
 @ComponentScan(excludeFilters =
@@ -15,7 +16,9 @@ import java.sql.SQLException;
 public class ArchitectCourseApplication { //extends SpringBootServletInitializer {
 
     public static void main(String[] args) throws SQLException {
-        SpringApplication.run(ArchitectCourseApplication.class);
+
+        System.out.println("913MA1U11000041998".substring(3, 7));
+        //SpringApplication.run(ArchitectCourseApplication.class);
     }
 
    /* @Override
