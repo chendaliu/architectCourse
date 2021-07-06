@@ -20,8 +20,8 @@ public class ActivitiConfig implements ProcessEngineConfigurationConfigurer {
         processEngineConfiguration.setLabelFontName("宋体");
         processEngineConfiguration.setAnnotationFontName("宋体");
 
-        processEngineConfiguration.setDbIdentityUsed(false);
-        processEngineConfiguration.setDatabaseSchemaUpdate("true");
+//        processEngineConfiguration.setDbIdentityUsed(false);
+//        processEngineConfiguration.setDatabaseSchemaUpdate("true");
     }
 
 }

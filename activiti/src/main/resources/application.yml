@@ -20,3 +20,5 @@ spring:
     #      - **.bpmn20.xml
     #建history表
     history-level: full
+    #否使用activiti自带用户组织表，如果是，这里为true，如果不是，这里为false
+    db-identity-used: true
