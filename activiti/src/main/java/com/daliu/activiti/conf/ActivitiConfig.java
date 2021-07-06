@@ -1,17 +1,8 @@
 package com.daliu.activiti.conf;
 
-import org.activiti.spring.SpringAsyncExecutor;
 import org.activiti.spring.SpringProcessEngineConfiguration;
-import org.activiti.spring.boot.AbstractProcessEngineAutoConfiguration;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.transaction.PlatformTransactionManager;
-
-import javax.sql.DataSource;
-import java.io.IOException;
+import org.activiti.spring.boot.ProcessEngineConfigurationConfigurer;
+import org.springframework.stereotype.Component;
 
 /**
  * @Title:
@@ -20,23 +11,17 @@ import java.io.IOException;
  * @CreateTime: 2021-06-29 20:25
  * @Version:1.0
  **/
-@Configuration
-public class ActivitiConfig extends AbstractProcessEngineAutoConfiguration {
+@Component
+public class ActivitiConfig implements ProcessEngineConfigurationConfigurer {
 
-    @Bean
-    @Primary
-    @ConfigurationProperties(prefix = "spring.datasource")
-    public DataSource activitiDataSource() {
-        return DataSourceBuilder.create().build();
+    @Override
+    public void configure(SpringProcessEngineConfiguration processEngineConfiguration) {
+        processEngineConfiguration.setActivityFontName("宋体");
+        processEngineConfiguration.setLabelFontName("宋体");
+        processEngineConfiguration.setAnnotationFontName("宋体");
+
+        processEngineConfiguration.setDbIdentityUsed(false);
+        processEngineConfiguration.setDatabaseSchemaUpdate("true");
     }
-
-    @Bean
-    public SpringProcessEngineConfiguration springProcessEngineConfiguration(
-            PlatformTransactionManager transactionManager,
-            SpringAsyncExecutor springAsyncExecutor) throws IOException {
-
-        return baseSpringProcessEngineConfiguration(activitiDataSource(), transactionManager, springAsyncExecutor);
-    }
-
 
 }
