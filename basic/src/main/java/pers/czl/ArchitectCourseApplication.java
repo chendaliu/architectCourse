@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Arrays;
 
@@ -17,8 +18,8 @@ public class ArchitectCourseApplication { //extends SpringBootServletInitializer
 
     public static void main(String[] args) throws SQLException {
 
-        System.out.println("913MA1U11000041998".substring(3, 7));
         //SpringApplication.run(ArchitectCourseApplication.class);
+        System.out.println(new BigDecimal(6.48).divide(new BigDecimal(100.00), 2, BigDecimal.ROUND_HALF_UP));
     }
 
    /* @Override
