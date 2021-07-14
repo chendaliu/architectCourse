@@ -1,14 +1,16 @@
 package com.daliu.activiti;
 
 import org.activiti.engine.*;
+import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.List;
 import java.util.zip.ZipInputStream;
 
@@ -182,7 +184,7 @@ class ActivitiApplicationTests {
         String filePath = "d:/";
         File f = new File(filePath + "请假工作流.png");
         try (InputStream inputStream = repositoryService.getProcessDiagram(processDefinetionId);
-            OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(f))) {
+             OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(f))) {
 
             int len = 0;
             byte[] b = new byte[1024];
@@ -191,8 +193,6 @@ class ActivitiApplicationTests {
                 outputStream.flush();
             }
             System.out.println(String.format("流程图已下载到：%s", filePath));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -203,7 +203,6 @@ class ActivitiApplicationTests {
      **/
     @Test
     public void queryNewProcessDef() {
-        HashMap<String, ProcessDefinition> map = new HashMap<>();
         ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
         RepositoryService repositoryService = processEngine.getRepositoryService();
 
@@ -221,4 +220,168 @@ class ActivitiApplicationTests {
             System.out.println("=====================");
         });
     }
+
+    /****************************以下开始流程实例、任务的执行**********************************/
+
+    /**
+     * 启动流程
+     */
+    @Test
+    public void startProcess2() {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        RuntimeService runtimeService = processEngine.getRuntimeService();
+//		runtimeService.startProcessInstanceById(processDefinitionId)//根据流程定义ID启动流程
+        /**
+         * 参数1：流程定义ID
+         * 参数2：Map<String,Object> 流程变量
+         */
+//		runtimeService.startProcessInstanceById(processDefinitionId, variables);
+        /**
+         * 参数1：流程定义ID
+         * 参数2：String 业务ID 把业务ID和流程执行实例进行绑定
+         */
+//		runtimeService.startProcessInstanceById(processDefinitionId, businessKey);
+        /**
+         * 参数1：流程定义ID
+         * 参数2：String 业务ID 把业务ID和流程执行实例进行绑定
+         * 参数3：Map<String,Object> 流程变量
+         */
+//		runtimeService.startProcessInstanceById(processDefinitionId, businessKey, variables)
+//
+//		runtimeService.startProcessInstanceByKey(processDefinitionKey)//根据流程定义的key启动
+        /**
+         * 参数1：流程定义的Key
+         * 参数2：Map<String,Object> 流程变量
+         */
+//		runtimeService.startProcessInstanceByKey(processDefinitionKey, variables)
+        /**
+         * 参数1：流程定义Key
+         * 参数2：String 业务ID 把业务ID和流程执行实例进行绑定
+         */
+//		runtimeService.startProcessInstanceByKey(processDefinitionId, businessKey);
+        /**
+         * 参数1：流程定义Key
+         * 参数2：String 业务ID 把业务ID和流程执行实例进行绑定
+         * 参数3：Map<String,Object> 流程变量
+         */
+//		runtimeService.startProcessInstanceByKey(processDefinitionId, businessKey, variables)
+
+        //实例开发中使用的
+        //runtimeService.startProcessInstanceByKey(processDefinitionId, businessKey, variables)
+        //runtimeService.startProcessInstanceByKey(processDefinitionId, businessKey);
+
+        String processDefinitionKey="LeaveProcess";
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey);
+        System.out.println("流程启动成功:"+processInstance.getId()+"   "+processInstance.getProcessDefinitionId()+"  "+processInstance.getProcessInstanceId());
+
+    }
+
+    /**
+     * 办理任务
+     **/
+    @Test
+    public void completeTask() {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        TaskService taskService = processEngine.getTaskService();
+        String taskId = "47504";
+        //根据任务ID去完成任务
+        taskService.complete(taskId);
+        //根据任务ID去完成任务并指定流程变量
+        //taskService.complete(taskId, variables);
+        //taskService.complete(taskId, variables, true);
+        System.out.println("任务完成");
+    }
+
+    /**
+     * 判断流程是否结束 作用：更新业务表里面的状态
+     */
+    @Test
+    public void isComplete() {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        RuntimeService runtimeService = processEngine.getRuntimeService();
+        //流程实例表act_ru_execution的id。流程启动就会记录在该表，只要没执行完就会有一条数据
+        String processInstanceId = "37501";
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+                .processInstanceId(processInstanceId).singleResult();
+        if (null != processInstance) {
+            System.out.println("流程未结束");
+        } else {
+            System.out.println("流程已结束");
+        }
+
+        //根据任务ID查询任务实例对象
+		/*TaskService taskService = this.processEngine.getTaskService();
+		String taskId="5002";
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		//从任务实例里面取出流程实例ID
+		String processInstanceId2 = task.getProcessInstanceId();
+		//使用流程实例ID去流程实例表里面查询有没有数据
+		ProcessInstanceQuery processInstance2 = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId2);
+		if (null != processInstance2) {
+			System.out.println("流程未结束");
+		} else {
+			System.out.println("流程已结束");
+		}*/
+    }
+
+    /**
+     * 查询当前的流程实例 act_ru_execution
+     **/
+    @Test
+    public void queryProcessInstance() {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        RuntimeService runtimeService = processEngine.getRuntimeService();
+        List<ProcessInstance> list = runtimeService.createProcessInstanceQuery().list();
+        if (null != list && list.size() > 0) {
+            for (ProcessInstance pi : list) {
+                System.out.println("执行实例ID:" + pi.getId());
+                System.out.println("流程定义ID:" + pi.getProcessDefinitionId());
+                System.out.println("流程实例ID:" + pi.getProcessInstanceId());
+                System.out.println("########################");
+            }
+        }
+    }
+
+    /**
+     * 查询历史任务 act_hi_taskinst
+     */
+    @Test
+    public void queryHistoryTask() {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        HistoryService historyService = processEngine.getHistoryService();
+        List<HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery().list();
+        if (null != list && list.size() > 0) {
+            for (HistoricTaskInstance hi : list) {
+                System.out.println("任务ID:" + hi.getId());
+                System.out.println("任务办理人:" + hi.getAssignee());
+                System.out.println("执行实例ID:" + hi.getExecutionId());
+                System.out.println("任务名称:" + hi.getName());
+                System.out.println("流程定义ID:" + hi.getProcessDefinitionId());
+                System.out.println("流程实例ID:" + hi.getProcessInstanceId());
+                System.out.println("任务创建时间:" + hi.getCreateTime());
+                System.out.println("任务结束时间:" + hi.getEndTime());
+                System.out.println("任务持续时间:" + hi.getDurationInMillis());
+                System.out.println("####################");
+            }
+        }
+    }
+
+    /**
+     * 8，附加功能，查询历史流程实例（后面讲）
+     */
+    @Test
+    public void queryHistoryProcessInstance() {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        HistoryService historyService = processEngine.getHistoryService();
+        List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery().list();
+        if (null != list && list.size() > 0) {
+            for (HistoricProcessInstance hi : list) {
+                System.out.println("执行实例ID:" + hi.getId());
+                System.out.println("流程定义ID:" + hi.getProcessDefinitionId());
+                System.out.println("流程启动时间:" + hi.getStartTime());
+                System.out.println("########################");
+            }
+        }
+    }
+
 }
