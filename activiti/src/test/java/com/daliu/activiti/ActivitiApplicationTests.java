@@ -179,19 +179,18 @@ class ActivitiApplicationTests {
         RepositoryService repositoryService = processEngine.getRepositoryService();
         //流程定义id
         String processDefinetionId = "LeaveProcess:1:32504";
-        InputStream inputStream = repositoryService.getProcessDiagram(processDefinetionId);
-        File f = new File("d:/请假工作流.png");
-        try {
-            BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(f));
+        String filePath = "d:/";
+        File f = new File(filePath + "请假工作流.png");
+        try (InputStream inputStream = repositoryService.getProcessDiagram(processDefinetionId);
+            OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(f))) {
+
             int len = 0;
             byte[] b = new byte[1024];
             while ((len = inputStream.read(b)) != -1) {
                 outputStream.write(b, 0, len);
                 outputStream.flush();
             }
-
-            inputStream.close();
-            outputStream.close();
+            System.out.println(String.format("流程图已下载到：%s", filePath));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
