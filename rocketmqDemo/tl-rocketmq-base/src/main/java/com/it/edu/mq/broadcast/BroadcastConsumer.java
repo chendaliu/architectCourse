@@ -15,7 +15,7 @@ import java.util.List;
  * @date：2019/9/29
  * @version: V1.0
  * @slogan:
- * @description :
+ * @description :广播消费
  */
 public class BroadcastConsumer {
 
@@ -24,7 +24,7 @@ public class BroadcastConsumer {
         consumer.setNamesrvAddr("118.25.53.252:9876");
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         //广播,全量消费
-        consumer.setMessageModel(MessageModel.CLUSTERING);
+        consumer.setMessageModel(MessageModel.BROADCASTING);
 
         consumer.subscribe("TopicTest", "TagA || TagC || TagD");
 
