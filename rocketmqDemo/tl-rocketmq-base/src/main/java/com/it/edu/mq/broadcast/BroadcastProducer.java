@@ -15,7 +15,7 @@ import org.apache.rocketmq.remoting.common.RemotingHelper;
 public class BroadcastProducer {
 
     public static void main(String[] args) throws Exception {
-        DefaultMQProducer producer = new DefaultMQProducer("consumer_model_group");
+        DefaultMQProducer producer = new DefaultMQProducer("producer_model_group");
         producer.setNamesrvAddr("118.25.53.252:9876;192.168.241.199:9876");
         producer.start();
 

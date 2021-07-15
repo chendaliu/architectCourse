@@ -16,6 +16,7 @@ import java.util.zip.ZipInputStream;
 
 @SpringBootTest
 class ActivitiApplicationTests {
+    ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
 
     @Test
     void contextLoads() {
@@ -231,17 +232,17 @@ class ActivitiApplicationTests {
         ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
         RuntimeService runtimeService = processEngine.getRuntimeService();
 //		runtimeService.startProcessInstanceById(processDefinitionId)//根据流程定义ID启动流程
-        /**
+        /*
          * 参数1：流程定义ID
          * 参数2：Map<String,Object> 流程变量
          */
 //		runtimeService.startProcessInstanceById(processDefinitionId, variables);
-        /**
+        /*
          * 参数1：流程定义ID
          * 参数2：String 业务ID 把业务ID和流程执行实例进行绑定
          */
 //		runtimeService.startProcessInstanceById(processDefinitionId, businessKey);
-        /**
+        /*
          * 参数1：流程定义ID
          * 参数2：String 业务ID 把业务ID和流程执行实例进行绑定
          * 参数3：Map<String,Object> 流程变量
@@ -249,17 +250,17 @@ class ActivitiApplicationTests {
 //		runtimeService.startProcessInstanceById(processDefinitionId, businessKey, variables)
 //
 //		runtimeService.startProcessInstanceByKey(processDefinitionKey)//根据流程定义的key启动
-        /**
+        /*
          * 参数1：流程定义的Key
          * 参数2：Map<String,Object> 流程变量
          */
 //		runtimeService.startProcessInstanceByKey(processDefinitionKey, variables)
-        /**
+        /*
          * 参数1：流程定义Key
          * 参数2：String 业务ID 把业务ID和流程执行实例进行绑定
          */
 //		runtimeService.startProcessInstanceByKey(processDefinitionId, businessKey);
-        /**
+        /*
          * 参数1：流程定义Key
          * 参数2：String 业务ID 把业务ID和流程执行实例进行绑定
          * 参数3：Map<String,Object> 流程变量
@@ -383,5 +384,7 @@ class ActivitiApplicationTests {
             }
         }
     }
+
+    /////////////////////////////////////流程变量/////////////////////////////////////////
 
 }
