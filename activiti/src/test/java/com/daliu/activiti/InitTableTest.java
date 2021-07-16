@@ -2,6 +2,7 @@ package com.daliu.activiti;
 
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.ProcessEngineConfiguration;
+import org.activiti.engine.ProcessEngines;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -41,24 +42,20 @@ public class InitTableTest {
          *
          */
         // 配置表的初始化的方式
-        configuration.setDatabaseSchemaUpdate(ProcessEngineConfiguration.DB_SCHEMA_UPDATE_CREATE_DROP);
+        configuration.setDatabaseSchemaUpdate("drop-create");
 
         // 得到流程引擎
         ProcessEngine processEngine = configuration.buildProcessEngine();
         System.out.println(processEngine);
     }
 
+    /**
+     * 执行后会清空所有表
+     **/
     @Test
     public void initTables2() {
-        // 创建数据源
-
-        // 创建流程引擎的配置
-        ProcessEngineConfiguration configuration = ProcessEngineConfiguration
-                .createStandaloneProcessEngineConfiguration();
-        configuration.setJdbcDriver("com.mysql.jdbc.Driver");
-        configuration.setJdbcUrl("jdbc:mysql://192.168.32.128:3307/activiti?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&nullCatalogMeansCurrent=true");
-        configuration.setJdbcUsername("root");
-        configuration.setJdbcPassword("123456");
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        ProcessEngineConfiguration configuration = processEngine.getProcessEngineConfiguration();
         /**
          * ProcessEngineConfiguration.DB_SCHEMA_UPDATE_FALSE 如果数据库里面没有activit的表，也不会创建
          * ProcessEngineConfiguration.DB_SCHEMA_UPDATE_CREATE_DROP 创建表，使用完之后删除
@@ -68,10 +65,10 @@ public class InitTableTest {
          *
          */
         // 配置表的初始化的方式
-        configuration.setDatabaseSchemaUpdate(ProcessEngineConfiguration.DB_SCHEMA_UPDATE_CREATE_DROP);
+        configuration.setDatabaseSchemaUpdate("drop-create");
 
         // 得到流程引擎
-        ProcessEngine processEngine = configuration.buildProcessEngine();
+        configuration.buildProcessEngine();
         System.out.println(processEngine);
     }
 }

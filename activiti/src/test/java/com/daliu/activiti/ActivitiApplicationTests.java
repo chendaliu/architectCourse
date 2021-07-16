@@ -1,8 +1,11 @@
 package com.daliu.activiti;
 
+import com.daliu.activiti.model.User;
 import org.activiti.engine.*;
+import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -11,12 +14,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.*;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipInputStream;
 
 @SpringBootTest
 class ActivitiApplicationTests {
-    ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
 
     @Test
     void contextLoads() {
@@ -271,9 +276,9 @@ class ActivitiApplicationTests {
         //runtimeService.startProcessInstanceByKey(processDefinitionId, businessKey, variables)
         //runtimeService.startProcessInstanceByKey(processDefinitionId, businessKey);
 
-        String processDefinitionKey="LeaveProcess";
+        String processDefinitionKey = "LeaveProcess";
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey);
-        System.out.println("流程启动成功:"+processInstance.getId()+"   "+processInstance.getProcessDefinitionId()+"  "+processInstance.getProcessInstanceId());
+        System.out.println("流程启动成功:" + processInstance.getId() + "   " + processInstance.getProcessDefinitionId() + "  " + processInstance.getProcessInstanceId());
 
     }
 
@@ -385,6 +390,264 @@ class ActivitiApplicationTests {
         }
     }
 
-    /////////////////////////////////////流程变量/////////////////////////////////////////
+
+    /////////////////////////////////////======流程变量======/////////////////////////////////////////
+    //准备：
+    //1.先清空所有表，执行：com.daliu.activiti.InitTableTest.initTables2
+    //2.部署工作流 this.deployProcess()
+
+    /**
+     * 启动流程实例，并设置流程变量
+     * 执行完后流程变量表出现数据 ACT_RU_VARIABLE
+     */
+    @Test
+    public void startProcessByVariables() {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        RuntimeService runtimeService = processEngine.getRuntimeService();
+        String processDefinitionKey = "LeaveProcess";
+//		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey);
+        //创建流程变量对象
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("请假天数", 5);//int
+        variables.put("请假原因", "约会");
+        variables.put("请假时间", new Date());
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey, variables);
+        System.out.println("流程启动成功:" + processInstance.getId() + "   " + processInstance.getProcessDefinitionId() + "  "
+                + processInstance.getProcessInstanceId());
+    }
+
+    /**
+     * 设置流程变量1
+     * User二进制变量记录在表：ACT_GE_BYTEARRAY
+     */
+    @Test
+    public void setVariables() {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        RuntimeService runtimeService = processEngine.getRuntimeService();
+        String executionId = "2501";
+        //runtimeService.setVariable(executionId, "请假人", "小明");
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("请假天数", 6);//int
+        variables.put("请假原因", "约会妹子");
+        variables.put("请假时间", new Date());
+        variables.put("用户对象", new User(1, "小明"));
+        runtimeService.setVariables(executionId, variables);
+        System.out.println("流程变量设置成功");
+    }
+
+    /**
+     * 设置流程变量2，给task设置变量
+     *
+     * setVariable和setVariableLocal的区别
+     * setVariable：设置流程变量的时候，流程变量名称相同的时候，后一次的值替换前一次的值，而且可以看到TASK_ID的字段不会存放任务ID的值
+     * setVariableLocal：
+     * 1：设置流程变量的时候，针对当前活动的节点设置流程变量，如果一个流程中存在2个活动节点，对每个活动节点都设置流程变量，即使流程变量的名称相同，
+     * 后一次的版本的值也不会替换前一次版本的值，它会使用不同的任务ID作为标识，存放2个流程变量值，而且可以看到TASK_ID的字段会存放任务ID的值，
+     * 例如act_hi_varinst 表的数据：不同的任务节点，即使流程变量名称相同，存放的值也是不同的。
+     */
+    @Test
+    public void setVariables2() {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        TaskService taskService = processEngine.getTaskService();
+
+        String taskId = "2510";
+        //runtimeService.setVariable(executionId, "请假人", "小明");
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("任务ID设置的", 9);//int
+//		taskService.setVariable(taskId, variableName, value);
+        taskService.setVariables(taskId, variables);
+        System.out.println("流程变量设置成功");
+    }
+
+    /**
+     * 获取流程变量
+     */
+    @Test
+    public void getVariables() {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        RuntimeService runtimeService = processEngine.getRuntimeService();
+        String executionId = "2501";
+        Integer days = (Integer) runtimeService.getVariable(executionId, "请假天数");
+        Date date = (Date) runtimeService.getVariable(executionId, "请假时间");
+        User user = (User) runtimeService.getVariable(executionId, "用户对象");
+        System.out.println(days);
+        System.out.println(date.toLocaleString());
+        System.out.println(user.getId() + "  " + user.getName());
+    }
+
+    /**
+     * 查询历史的流程变量
+     */
+    @Test
+    public void getHistoryVariables() {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        HistoryService historyService = processEngine.getHistoryService();
+
+        //根据变量id查询单个变量
+		/*HistoricVariableInstance singleResult = historyService.createHistoricVariableInstanceQuery().id("12503").singleResult();;
+		System.out.println(singleResult.getId());
+		System.out.println(singleResult.getValue());
+		System.out.println(singleResult.getVariableName());
+		System.out.println(singleResult.getVariableTypeName());*/
+
+        System.out.println("------------------------");
+
+        String processInstanceId = "2501";
+        List<HistoricVariableInstance> list = historyService.createHistoricVariableInstanceQuery().processInstanceId(processInstanceId).list();
+        for (HistoricVariableInstance hvs : list) {
+            System.out.println("ID：" + hvs.getId());
+            System.out.println("变量值：" + hvs.getValue());
+            System.out.println("变量名：" + hvs.getVariableName());
+            System.out.println("变量类型：" + hvs.getVariableTypeName());
+            System.out.println("#####################");
+        }
+    }
+
+
+    //////////////////////==========查询流程执行历史记录===============////////////////////////
+
+    /**
+     * 1，查询历史流程实例 ACT_HI_PROCINST
+     **/
+    @Test
+    public void historyProcessInstince() {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        HistoryService historyService = processEngine.getHistoryService();
+        List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery()
+                //条件
+//		.processDefinitionId(processDefinitionId)
+//		.processDefinitionKey(processDefinitionKey)
+//		.processDefinitionKeyIn(processDefinitionKeys)
+//		.processDefinitionName(processDefinitionName)
+//		.processDefinitionVersion(processDefinitionVersion)
+//		.processInstanceBusinessKey(processInstanceBusinessKey)
+//		.processInstanceId(processInstanceId)
+//		.processInstanceIds(processInstanceIds)
+                //排序
+//		.orderByProcessDefinitionId()
+//		.orderByProcessInstanceBusinessKey()
+//		.orderByProcessInstanceDuration()
+//		.orderByProcessInstanceStartTime()
+//		.orderByProcessInstanceId()
+                //结果集
+                .list();
+//		.listPage(firstResult, maxResults)
+//		.count()
+//		.singleResult();
+
+        if (null != list && list.size() > 0) {
+            for (HistoricProcessInstance hpi : list) {
+                System.out.println("历史流程实例ID:" + hpi.getId());
+                System.out.println("流程定义ID:" + hpi.getProcessDefinitionId());
+                System.out.println("历史流程实例的业务ID:" + hpi.getBusinessKey());
+                System.out.println("流程部署ID:" + hpi.getDeploymentId());
+                System.out.println("流程定义KEY:" + hpi.getProcessDefinitionKey());
+                System.out.println("开始活动ID:" + hpi.getStartActivityId());
+                System.out.println("结束活动ID:" + hpi.getEndActivityId());
+                System.out.println("########################");
+            }
+        }
+    }
+
+    /**
+     * 2，查询历史活动 ACT_HI_ACTINST
+     */
+    @Test
+    public void queryHistoryAct() {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        HistoryService historyService = processEngine.getHistoryService();
+        List<HistoricActivityInstance> list = historyService.createHistoricActivityInstanceQuery()
+                //条件
+//		.activityId(activityId)
+//		.activityInstanceId(activityInstanceId)
+//		.activityName(activityName)
+                //排序
+//		.orderByActivityId()
+//		.orderByActivityName()
+                //结果集
+                .list();
+        if (null != list && list.size() > 0) {
+            for (HistoricActivityInstance hai : list) {
+                System.out.println("ID:" + hai.getId());
+                System.out.println("流程定义ID:" + hai.getProcessDefinitionId());
+                System.out.println("流程实例ID:" + hai.getProcessInstanceId());
+                System.out.println("执行实例ID:" + hai.getExecutionId());
+                System.out.println("活动ID:" + hai.getActivityId());
+                System.out.println("任务ID:" + hai.getTaskId());
+                System.out.println("活动名称:" + hai.getActivityName());
+                System.out.println("活动类型:" + hai.getActivityType());
+                System.out.println("任务办理人:" + hai.getAssignee());
+                System.out.println("开始时间:" + hai.getStartTime());
+                System.out.println("结束时间:" + hai.getEndTime());
+                System.out.println("持续时间:" + hai.getDurationInMillis());
+                System.out.println("#######################################");
+            }
+        }
+    }
+
+    /**
+     * 3，查询历史任务 act_hi_taskinst
+     */
+    @Test
+    public void queryHistoryTask2() {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        HistoryService historyService = processEngine.getHistoryService();
+        List<HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery()
+                //条件
+//		.deploymentId(deploymentId)
+//		.deploymentIdIn(deploymentIds)
+//		.executionId(executionId)
+//		.processDefinitionId(processDefinitionId)
+//		.processDefinitionKey(processDefinitionKey)
+//		.processDefinitionKeyIn(processDefinitionKeys)
+//		.processDefinitionKeyLike(processDefinitionKeyLike)     processDefinitionKeyLike="%Hello%"
+//		.processDefinitionName(processDefinitionName)
+//		.processDefinitionNameLike(processDefinitionNameLike)
+                //排序
+//		.orderByTaskDefinitionKey()
+                //结果集
+                .list();
+//		.listPage(firstResult, maxResults)
+//		.count()
+//		.singleResult()
+        if (null != list && list.size() > 0) {
+            for (HistoricTaskInstance task : list) {
+                System.out.println("任务ID:" + task.getId());
+                System.out.println("任务办理人:" + task.getAssignee());
+                System.out.println("执行实例ID:" + task.getExecutionId());
+                System.out.println("任务名称:" + task.getName());
+                System.out.println("流程定义ID:" + task.getProcessDefinitionId());
+                System.out.println("流程实例ID:" + task.getProcessInstanceId());
+                System.out.println("任务创建时间:" + task.getCreateTime());
+                System.out.println("任务结束时间:" + task.getEndTime());
+                System.out.println("#######################################");
+            }
+        }
+    }
+
+    /**
+     * 7：查询历史的流程变量
+     */
+    @Test
+    public void getHistoryVariables1() {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        HistoryService historyService = processEngine.getHistoryService();
+
+		/*HistoricVariableInstance singleResult = historyService.createHistoricVariableInstanceQuery().id("2503").singleResult();;
+		System.out.println(singleResult.getId());
+		System.out.println(singleResult.getValue());
+		System.out.println(singleResult.getVariableName());
+		System.out.println(singleResult.getVariableTypeName());*/
+        String processInstanceId="2501";
+        List<HistoricVariableInstance> list = historyService.createHistoricVariableInstanceQuery().processInstanceId(processInstanceId).list();
+
+        for (HistoricVariableInstance hvs : list) {
+            System.out.println("ID"+hvs.getId());
+            System.out.println("变量值"+hvs.getValue());
+            System.out.println("变量名"+hvs.getVariableName());
+            System.out.println("变量类型"+hvs.getVariableTypeName());
+            System.out.println("#####################");
+        }
+    }
 
 }
