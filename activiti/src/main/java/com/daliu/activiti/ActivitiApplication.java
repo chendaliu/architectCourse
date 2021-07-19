@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement //启用事务
 public class ActivitiApplication {
 
-	public static void main(String[] args) {
+	public static void main(String[] args){
 		SpringApplication.run(ActivitiApplication.class, args);
 	}
 

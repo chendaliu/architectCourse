@@ -469,7 +469,7 @@ class ActivitiApplicationTests {
         String executionId = "2501";
         Integer days = (Integer) runtimeService.getVariable(executionId, "请假天数");
         Date date = (Date) runtimeService.getVariable(executionId, "请假时间");
-        User user = (User) runtimeService.getVariable(executionId, "用户对象");
+        com.daliu.activiti.model.User user = (User) runtimeService.getVariable(executionId, "用户对象");
         System.out.println(days);
         System.out.println(date.toLocaleString());
         System.out.println(user.getId() + "  " + user.getName());

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="ExclusiveGateWay" name="排他网关-报销流程" isExecutable="true">
+    <startEvent id="startevent1" name="Start"></startEvent>
+    <userTask id="feeApply" name="费用报销申请" activiti:assignee="张三"></userTask>
+    <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="feeApply"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow2" sourceRef="feeApply" targetRef="exclusivegateway1"></sequenceFlow>
+    <userTask id="financialApproval" name="审批【财务】" activiti:assignee="李四"></userTask>
+    <sequenceFlow id="flow3" name="费用小于500" sourceRef="exclusivegateway1" targetRef="financialApproval">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${money<500}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="divisionManager" name="审批【部门经理】" activiti:assignee="王五"></userTask>
+    <sequenceFlow id="flow4" name="费用大于等于500小于1000" sourceRef="exclusivegateway1" targetRef="divisionManager">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${money>=500 && money < 1000}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="generalManager" name="审批【总经理】" activiti:assignee="赵六"></userTask>
+    <sequenceFlow id="flow5" name="费用大于等于1000" sourceRef="exclusivegateway1" targetRef="generalManager">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${money >= 1000}]]></conditionExpression>
+    </sequenceFlow>
+    <endEvent id="endevent2" name="End"></endEvent>
+    <sequenceFlow id="flow8" sourceRef="financialApproval" targetRef="endevent2"></sequenceFlow>
+    <sequenceFlow id="flow9" sourceRef="divisionManager" targetRef="endevent2"></sequenceFlow>
+    <sequenceFlow id="flow10" sourceRef="generalManager" targetRef="endevent2"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_ExclusiveGateWay">
+    <bpmndi:BPMNPlane bpmnElement="ExclusiveGateWay" id="BPMNPlane_ExclusiveGateWay">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="240.0" y="170.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="feeApply" id="BPMNShape_feeApply">
+        <omgdc:Bounds height="55.0" width="105.0" x="320.0" y="160.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="500.0" y="167.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="financialApproval" id="BPMNShape_financialApproval">
+        <omgdc:Bounds height="55.0" width="105.0" x="633.0" y="50.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="divisionManager" id="BPMNShape_divisionManager">
+        <omgdc:Bounds height="55.0" width="161.0" x="625.0" y="160.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="generalManager" id="BPMNShape_generalManager">
+        <omgdc:Bounds height="55.0" width="121.0" x="625.0" y="290.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent2" id="BPMNShape_endevent2">
+        <omgdc:Bounds height="35.0" width="35.0" x="870.0" y="170.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="275.0" y="187.0"></omgdi:waypoint>
+        <omgdi:waypoint x="320.0" y="187.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="425.0" y="187.0"></omgdi:waypoint>
+        <omgdi:waypoint x="500.0" y="187.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="520.0" y="167.0"></omgdi:waypoint>
+        <omgdi:waypoint x="685.0" y="105.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="16.0" width="100.0" x="510.0" y="124.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="540.0" y="187.0"></omgdi:waypoint>
+        <omgdi:waypoint x="625.0" y="187.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="48.0" width="100.0" x="539.0" y="170.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="520.0" y="207.0"></omgdi:waypoint>
+        <omgdi:waypoint x="685.0" y="290.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="48.0" width="100.0" x="530.0" y="237.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="685.0" y="105.0"></omgdi:waypoint>
+        <omgdi:waypoint x="887.0" y="170.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
+        <omgdi:waypoint x="786.0" y="187.0"></omgdi:waypoint>
+        <omgdi:waypoint x="870.0" y="187.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow10" id="BPMNEdge_flow10">
+        <omgdi:waypoint x="685.0" y="290.0"></omgdi:waypoint>
+        <omgdi:waypoint x="887.0" y="205.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
