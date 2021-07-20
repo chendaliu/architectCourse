@@ -18,8 +18,7 @@ public class ArchitectCourseApplication { //extends SpringBootServletInitializer
 
     public static void main(String[] args) throws SQLException {
 
-        //SpringApplication.run(ArchitectCourseApplication.class);
-        System.out.println(new BigDecimal(6.48).divide(new BigDecimal(100.00), 2, BigDecimal.ROUND_HALF_UP));
+        SpringApplication.run(ArchitectCourseApplication.class);
     }
 
    /* @Override
