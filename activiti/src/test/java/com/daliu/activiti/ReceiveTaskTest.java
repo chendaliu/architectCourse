@@ -26,8 +26,10 @@ public class ReceiveTaskTest {
     @Test
     public void deployProcess() {
         ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+
+        //1.部署流程定义
         RepositoryService repositoryService = processEngine.getRepositoryService();
-        Deployment deploy = repositoryService.createDeployment().name("报销流程")
+        Deployment deploy = repositoryService.createDeployment().name("接受任务流程")
                 .addClasspathResource("processes/ReceiveTask.bpmn").deploy();
         System.out.println("部署成功，流程ID：" + deploy.getId());
     }
@@ -42,6 +44,19 @@ public class ReceiveTaskTest {
         String processDefinitionKey = "RecieveTask";
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey);
         System.out.println("启动流程成功");
+        System.out.println("流程实例id：" + processInstance.getId());
+    }
+
+    /**
+     * 查询执行对象
+     **/
+    @Test
+    public void findExecution() {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        RuntimeService runtimeService = processEngine.getRuntimeService();
+        String processInstanceId = "2501";
+        Execution execution = runtimeService.createExecutionQuery().processInstanceId(processInstanceId).singleResult();
+        System.out.println("执行对象id：" + execution.getId());
     }
 
     /**
@@ -86,41 +101,13 @@ public class ReceiveTaskTest {
     public void executionTask() {
         ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
         RuntimeService runtimeService = processEngine.getRuntimeService();
-        String processInstanceId = "2501";
-        /** 查询执行对象ID */
-        Execution execution1 = runtimeService//
-                .createExecutionQuery()// 创建执行对象查询
-                .processInstanceId(processInstanceId)// 使用流程实例ID查询
-                .activityId("totalSalesStatistics")// 当前活动的id，对应receiveTask.bpmn文件中的活动节点id的属性值
-                .singleResult();
-        System.out.println("执行实例ID:" + execution1.getId());
-        System.out.println("流程实例ID:" + execution1.getProcessInstanceId());
-        System.out.println("活动ID:" + execution1.getActivityId());
-
-        /** 使用流程变量设置当日销售额，用来传递业务参数 */
-        int value = 10000;// 应该是去查询数据库，进行汇总 ---耗时操作
-        runtimeService.setVariable(execution1.getId(), "当前的销售额", value);
-        /** 向后执行一步，如果流程处于等待状态，使得流程继续执行 */
-        runtimeService.signal(execution1.getId());
-    }
-
-    /**
-     * 发短信
-     */
-    @Test
-    public void sendMessage() {
-        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
-        RuntimeService runtimeService = processEngine.getRuntimeService();
         String executionId = "2501";
-        /** 从流程变量中获取汇总当日销售额的值 */
-        Integer value = (Integer) runtimeService//
-                .getVariable(executionId, "当前的销售额");
-        System.out.println("发送成功");
 
-        /** 向后执行一步，如果流程处于等待状态，使得流程继续执行 */
+        //使用流程变量设置当日销售额，用来传递业务参数
+        int value = 10000;// 应该是去查询数据库，进行汇总 ---耗时操作
+        runtimeService.setVariable(executionId, "当前的销售额", value);
+        //向后执行一步，如果流程处于等待状态，使得流程继续执行
         runtimeService.signal(executionId);
-        System.out.println("流程执行完成");
-
     }
 
     @Test
@@ -147,6 +134,25 @@ public class ReceiveTaskTest {
         /** 向后执行一步，如果流程处于等待状态，使得流程继续执行 */
         runtimeService.signal(processInstance.getId());
         System.out.println("流程执行完成");
+    }
+
+    /**
+     * 发短信
+     */
+    @Test
+    public void sendMessage() {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        RuntimeService runtimeService = processEngine.getRuntimeService();
+        String executionId = "2501";
+        /** 从流程变量中获取汇总当日销售额的值 */
+        Integer value = (Integer) runtimeService//
+                .getVariable(executionId, "当前的销售额");
+        System.out.println("发送成功");
+
+        /** 向后执行一步，如果流程处于等待状态，使得流程继续执行 */
+        runtimeService.signal(executionId);
+        System.out.println("流程执行完成");
+
     }
 
 }

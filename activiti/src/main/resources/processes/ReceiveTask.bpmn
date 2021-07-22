@@ -4,9 +4,9 @@
     <startEvent id="startevent1" name="Start"></startEvent>
     <receiveTask id="totalSalesStatistics" name="统计销售总额"></receiveTask>
     <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="totalSalesStatistics"></sequenceFlow>
-    <userTask id="sendMsg" name="发送短信给领导"></userTask>
-    <sequenceFlow id="flow2" sourceRef="totalSalesStatistics" targetRef="sendMsg"></sequenceFlow>
+    <receiveTask id="sendMsg" name="发短信给老板"></receiveTask>
     <endEvent id="endevent1" name="End"></endEvent>
+    <sequenceFlow id="flow2" sourceRef="totalSalesStatistics" targetRef="sendMsg"></sequenceFlow>
     <sequenceFlow id="flow3" sourceRef="sendMsg" targetRef="endevent1"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_RecieveTask">
@@ -18,10 +18,10 @@
         <omgdc:Bounds height="55.0" width="105.0" x="310.0" y="210.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="sendMsg" id="BPMNShape_sendMsg">
-        <omgdc:Bounds height="55.0" width="121.0" x="520.0" y="210.0"></omgdc:Bounds>
+        <omgdc:Bounds height="55.0" width="121.0" x="500.0" y="210.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
-        <omgdc:Bounds height="35.0" width="35.0" x="750.0" y="220.0"></omgdc:Bounds>
+        <omgdc:Bounds height="35.0" width="35.0" x="680.0" y="220.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
         <omgdi:waypoint x="215.0" y="237.0"></omgdi:waypoint>
@@ -29,11 +29,11 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
         <omgdi:waypoint x="415.0" y="237.0"></omgdi:waypoint>
-        <omgdi:waypoint x="520.0" y="237.0"></omgdi:waypoint>
+        <omgdi:waypoint x="500.0" y="237.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
-        <omgdi:waypoint x="641.0" y="237.0"></omgdi:waypoint>
-        <omgdi:waypoint x="750.0" y="237.0"></omgdi:waypoint>
+        <omgdi:waypoint x="621.0" y="237.0"></omgdi:waypoint>
+        <omgdi:waypoint x="680.0" y="237.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
