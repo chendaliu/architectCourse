@@ -114,44 +114,34 @@ public class ReceiveTaskTest {
     public void doTask() {
         ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
         RuntimeService runtimeService = processEngine.getRuntimeService();
-        String processDefinitionKey = "myProcess";
+        String processDefinitionKey = "RecieveTask";
+
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey);
         System.out.println("流程启动成功:" + processInstance.getId() + "   " + processInstance.getProcessDefinitionId() + "  "
                 + processInstance.getProcessInstanceId());
-        /** 使用流程变量设置当日销售额，用来传递业务参数 */
-        int value = 0;// 应该是去查询数据库，进行汇总 ---耗时操作
-        int tryNum = 0;
+
+        int amount = 10000;
         System.out.println("数据汇总完成");
-        runtimeService.setVariable(processInstance.getId(), "当前的销售额", value);
-        /** 向后执行一步，如果流程处于等待状态，使得流程继续执行 */
+        runtimeService.setVariable(processInstance.getId(), "当前的销售额", amount);
+        // 向后执行一步，如果流程处于等待状态，使得流程继续执行
         runtimeService.signal(processInstance.getId());
 
-        /** 从流程变量中获取汇总当日销售额的值 */
-        Integer saleMoney = (Integer) runtimeService//
-                .getVariable(processInstance.getId(), "当前的销售额");
+        // 从流程变量中获取汇总当日销售额的值
+        Integer saleMoney = (Integer) runtimeService.getVariable(processInstance.getId(), "当前的销售额");
         System.out.println(saleMoney);
-        System.out.println("短信完成");
-        /** 向后执行一步，如果流程处于等待状态，使得流程继续执行 */
+        System.out.println("发送短信完成");
+
+        // 向后执行一步，如果流程处于等待状态，使得流程继续执行
         runtimeService.signal(processInstance.getId());
-        System.out.println("流程执行完成");
-    }
 
-    /**
-     * 发短信
-     */
-    @Test
-    public void sendMessage() {
-        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
-        RuntimeService runtimeService = processEngine.getRuntimeService();
-        String executionId = "2501";
-        /** 从流程变量中获取汇总当日销售额的值 */
-        Integer value = (Integer) runtimeService//
-                .getVariable(executionId, "当前的销售额");
-        System.out.println("发送成功");
-
-        /** 向后执行一步，如果流程处于等待状态，使得流程继续执行 */
-        runtimeService.signal(executionId);
-        System.out.println("流程执行完成");
+        //9.判断流程是否结束
+        ProcessInstance nowPi = processEngine.getRuntimeService()
+                .createProcessInstanceQuery()
+                .processInstanceId(processInstance.getId())
+                .singleResult();
+        if(nowPi == null){
+            System.out.println("流程结束");
+        }
 
     }
 

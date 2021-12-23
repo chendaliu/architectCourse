@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="loansBillProcess" name="放款审批流程" isExecutable="true">
+    <dataObject id="needUserWithdraw" name="needUserWithdraw" itemSubjectRef="xsd:string">
+      <extensionElements>
+        <activiti:value>N</activiti:value>
+      </extensionElements>
+    </dataObject>
+    <dataObject id="FLOW_VERSION" name="FLOW_VERSION" itemSubjectRef="xsd:int">
+      <extensionElements>
+        <activiti:value>1</activiti:value>
+      </extensionElements>
+    </dataObject>
+    <startEvent id="lbill_start" name="开始">
+      <extensionElements>
+        <activiti:executionListener event="start" delegateExpression="${loanStartListener}"></activiti:executionListener>
+      </extensionElements>
+    </startEvent>
+    <userTask id="CustomerManagerTask" name="客户经理" activiti:assignee="${firstHandler}" activiti:formKey="makeloans/process/v3/custmanager" activiti:priority="${priority}">
+      <extensionElements>
+        <activiti:taskListener event="complete" delegateExpression="${customerManagerTask}"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <endEvent id="endSuccess" name="正常结束">
+      <extensionElements>
+        <activiti:executionListener event="start" delegateExpression="${loanSuccessEndListener}"></activiti:executionListener>
+      </extensionElements>
+    </endEvent>
+    <userTask id="RiskCheckTask" name="风控审查" activiti:candidateGroups="10201020601" activiti:formKey="makeloans/process/v3/public" activiti:priority="${priority}">
+      <extensionElements>
+        <activiti:taskListener event="complete" delegateExpression="${riskCheckTask}"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="PledgeTask" name="质押登记" activiti:candidateGroups="102010105" activiti:category="${task_category_loan_pledge_register}" activiti:formKey="makeloans/process/v3/register" activiti:priority="${priority}">
+      <extensionElements>
+        <activiti:taskListener event="complete" delegateExpression="${loanCommonTask}"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="RiskAuditTask" name="风控审批" activiti:candidateGroups="10201020602" activiti:category="${task_category_loan_risk_manager_audit}" activiti:formKey="makeloans/process/v3/public" activiti:priority="${priority}">
+      <extensionElements>
+        <activiti:taskListener event="complete" delegateExpression="${loanCommonTask}"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow10" sourceRef="PledgeTask" targetRef="RiskAuditTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass=='Y'}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="FinanceTask" name="财务复核" activiti:candidateGroups="1030102" activiti:formKey="makeloans/process/v3/finance" activiti:priority="${priority}">
+      <extensionElements>
+        <activiti:taskListener event="complete" delegateExpression="${financeCheckTask}"></activiti:taskListener>
+        <activiti:taskListener event="create" delegateExpression="${getUserForFinance}"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="CashierTask" name="出纳" activiti:candidateGroups="1030101" activiti:formKey="makeloans/process/v3/cashier02" activiti:priority="${priority}">
+      <extensionElements>
+        <activiti:taskListener event="complete" delegateExpression="${cashierTask}"></activiti:taskListener>
+        <activiti:taskListener event="create" delegateExpression="${cashierStartListener}"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="SpeedModeCashierTask" name="出纳" activiti:candidateGroups="1030101" activiti:formKey="makeloans/process/v3/cashier02" activiti:priority="${priority}">
+      <extensionElements>
+        <activiti:taskListener event="complete" delegateExpression="${cashierTask}"></activiti:taskListener>
+        <activiti:taskListener event="create" delegateExpression="${cashierStartListener}"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="RiskAuditSpeedModeTask" name="风控审批" activiti:candidateGroups="10201020701" activiti:formKey="makeloans/process/v3/public" activiti:priority="${priority}">
+      <extensionElements>
+        <activiti:taskListener event="complete" delegateExpression="${loanCommonTask}"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="DistributionCashierTask" name="出纳" activiti:candidateGroups="1030101" activiti:formKey="makeloans/process/v3/cashier02" activiti:priority="${priority}">
+      <extensionElements>
+        <activiti:taskListener event="complete" delegateExpression="${cashierTask}"></activiti:taskListener>
+        <activiti:taskListener event="create" delegateExpression="${cashierStartListener}"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="UserWithdrawTask" name="用户提款" activiti:candidateUsers="system" activiti:formKey="makeloans/process/v3/public">
+      <extensionElements>
+        <activiti:taskListener event="complete" delegateExpression="${loanCommonTask}"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway" default="flow35"></exclusiveGateway>
+    <endEvent id="rejectEnd" name="异常结束">
+      <extensionElements>
+        <activiti:executionListener event="start" delegateExpression="${loanErrorEndListener}"></activiti:executionListener>
+      </extensionElements>
+    </endEvent>
+    <inclusiveGateway id="inclusivegateway1" name="Inclusive Gateway"></inclusiveGateway>
+    <sequenceFlow id="flow7" name="驳回" sourceRef="RiskCheckTask" targetRef="inclusivegateway1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass=='N'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow12" sourceRef="RiskAuditTask" targetRef="FinanceTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass=='Y'}]]></conditionExpression>
+    </sequenceFlow>
+    <endEvent id="sid-916F8478-F6BD-45C8-A3B6-668CD6D616E3">
+      <extensionElements>
+        <activiti:executionListener event="start" delegateExpression="${loanErrorEndListener}"></activiti:executionListener>
+      </extensionElements>
+    </endEvent>
+    <sequenceFlow id="flow26" sourceRef="RiskAuditSpeedModeTask" targetRef="SpeedModeCashierTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass=='Y'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow29" sourceRef="SpeedModeCashierTask" targetRef="RiskAuditSpeedModeTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass=='N'&&!isLittleAmount}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow8" sourceRef="RiskCheckTask" targetRef="PledgeTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass=='Y'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow24" sourceRef="PledgeTask" targetRef="RiskCheckTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass=='N'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow11" sourceRef="RiskAuditTask" targetRef="inclusivegateway1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass=='N'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow42" sourceRef="SpeedModeCashierTask" targetRef="sid-916F8478-F6BD-45C8-A3B6-668CD6D616E3">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass=='N'&&isLittleAmount}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow38" name="确认" sourceRef="UserWithdrawTask" targetRef="CashierTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass=='Y'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow30" sourceRef="RiskAuditSpeedModeTask" targetRef="sid-916F8478-F6BD-45C8-A3B6-668CD6D616E3">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass=='N'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow34" sourceRef="DistributionCashierTask" targetRef="endSuccess">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass=='Y'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow31" name="同意" sourceRef="CustomerManagerTask" targetRef="RiskCheckTask">
+      <extensionElements>
+        <activiti:executionListener event="take" delegateExpression="${loanFreezeCredit}"></activiti:executionListener>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass=='Y' && !needSignProductOrder}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow41" sourceRef="DistributionCashierTask" targetRef="sid-916F8478-F6BD-45C8-A3B6-668CD6D616E3">
+      <extensionElements>
+        <activiti:executionListener event="take" delegateExpression="${loanUnfreezeBalance}"></activiti:executionListener>
+        <activiti:executionListener event="take" delegateExpression="${loanUnfreezeCredit}"></activiti:executionListener>
+        <activiti:executionListener event="take" delegateExpression="${loanNanjingCashierRejectListener}"></activiti:executionListener>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass=='N'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow40" name="驳回到客户经理" sourceRef="inclusivegateway1" targetRef="CustomerManagerTask">
+      <extensionElements>
+        <activiti:executionListener event="end" delegateExpression="${loanUnfreezeCredit}"></activiti:executionListener>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="flow3" name="驳回结束" sourceRef="CustomerManagerTask" targetRef="rejectEnd">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass=='N'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow20" name="通过" sourceRef="CashierTask" targetRef="endSuccess">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass=='Y'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flowRejectByCashierToEnd" name="驳回" sourceRef="CashierTask" targetRef="rejectEnd">
+      <extensionElements>
+        <activiti:executionListener event="take" delegateExpression="${loanUnfreezeBalance}"></activiti:executionListener>
+        <activiti:executionListener event="take" delegateExpression="${loanUnfreezeCredit}"></activiti:executionListener>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ isPass =='N' && (fundSource !='0' || needUserWithdraw =='Y') }]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow37" name="取消" sourceRef="UserWithdrawTask" targetRef="rejectEnd">
+      <extensionElements>
+        <activiti:executionListener event="take" delegateExpression="${loanUnfreezeBalance}"></activiti:executionListener>
+        <activiti:executionListener event="take" delegateExpression="${loanUnfreezeCredit}"></activiti:executionListener>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass=='N'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flowRejectByCashierToCustMng" name="驳回到客户经理" sourceRef="CashierTask" targetRef="inclusivegateway1">
+      <extensionElements>
+        <activiti:executionListener event="take" delegateExpression="${loanUnfreezeBalance}"></activiti:executionListener>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass=='N' && fundSource =='0' && needUserWithdraw =='N'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow27" sourceRef="SpeedModeCashierTask" targetRef="endSuccess">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass=='Y'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow35" sourceRef="exclusivegateway1" targetRef="CashierTask"></sequenceFlow>
+    <sequenceFlow id="flow36" sourceRef="exclusivegateway1" targetRef="UserWithdrawTask">
+      <extensionElements>
+        <activiti:executionListener event="take" delegateExpression="${loanICBCAfterFinance}"></activiti:executionListener>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${needUserWithdraw =='Y' }]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flowFinancePass" name="同意" sourceRef="FinanceTask" targetRef="exclusivegateway1">
+      <extensionElements>
+        <activiti:executionListener event="take" delegateExpression="${loanFreezeBalance}"></activiti:executionListener>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass=='Y'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flowFinanceReject" name="驳回" sourceRef="FinanceTask" targetRef="inclusivegateway1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass=='N'}]]></conditionExpression>
+    </sequenceFlow>
+    <exclusiveGateway id="sid-DBFE3813-F717-456A-8A94-B57CBEC44CE3" default="flow1"></exclusiveGateway>
+    <sequenceFlow id="sid-CB5AB689-2603-4D6D-8D55-B06D423ABEE0" sourceRef="lbill_start" targetRef="sid-DBFE3813-F717-456A-8A94-B57CBEC44CE3"></sequenceFlow>
+    <sequenceFlow id="flow33" sourceRef="sid-DBFE3813-F717-456A-8A94-B57CBEC44CE3" targetRef="exclusivegateway2">
+      <extensionElements>
+        <activiti:executionListener event="take" delegateExpression="${loanFreezeCredit}"></activiti:executionListener>
+        <activiti:executionListener event="take" delegateExpression="${loanFreezeBalance}"></activiti:executionListener>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${business_type=='Y'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow25" sourceRef="sid-DBFE3813-F717-456A-8A94-B57CBEC44CE3" targetRef="RiskAuditSpeedModeTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${speed_mode=='Y'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow1" name="工程/零售" sourceRef="sid-DBFE3813-F717-456A-8A94-B57CBEC44CE3" targetRef="CustomerManagerTask"></sequenceFlow>
+    <userTask id="TowLevelRiskCheckTask" name="风控审查" activiti:candidateGroups="10201020601">
+      <extensionElements>
+        <activiti:taskListener event="complete" delegateExpression="${riskCheckTask}"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow43" sourceRef="TowLevelRiskCheckTask" targetRef="DistributionCashierTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ fundSource =='0' && isPass=='Y'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow44" name="驳回" sourceRef="TowLevelRiskCheckTask" targetRef="sid-916F8478-F6BD-45C8-A3B6-668CD6D616E3">
+      <extensionElements>
+        <activiti:executionListener event="take" delegateExpression="${loanUnfreezeCredit}"></activiti:executionListener>
+        <activiti:executionListener event="take" delegateExpression="${loanUnfreezeBalance}"></activiti:executionListener>
+        <activiti:executionListener event="take" delegateExpression="${loanNanjingRiskRejectListener}"></activiti:executionListener>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass=='N'}]]></conditionExpression>
+    </sequenceFlow>
+    <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow45" sourceRef="exclusivegateway2" targetRef="TowLevelRiskCheckTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isFirstSecondLoan=='Y'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow46" sourceRef="exclusivegateway2" targetRef="DistributionCashierTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ fundSource =='0' && isFirstSecondLoan=='N'}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="usertask1" name="银行审批" activiti:candidateGroups="BANK_CHECK">
+      <extensionElements>
+        <activiti:taskListener event="create" delegateExpression="${bankCreateTask}"></activiti:taskListener>
+        <activiti:taskListener event="complete" delegateExpression="${bankCompleteTask}"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow47" sourceRef="TowLevelRiskCheckTask" targetRef="usertask1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ fundSource !='0' && isPass=='Y'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow48" sourceRef="exclusivegateway2" targetRef="usertask1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ fundSource !='0' && isFirstSecondLoan=='N'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow49" sourceRef="usertask1" targetRef="DistributionCashierTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ isPass=='Y'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow50" sourceRef="usertask1" targetRef="sid-916F8478-F6BD-45C8-A3B6-668CD6D616E3">
+      <extensionElements>
+        <activiti:executionListener event="take" delegateExpression="${loanUnfreezeCredit}"></activiti:executionListener>
+        <activiti:executionListener event="take" delegateExpression="${loanUnfreezeBalance}"></activiti:executionListener>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ isPass=='N'}]]></conditionExpression>
+    </sequenceFlow>
+    <userTask id="usertask2" name="银行审批" activiti:candidateGroups="BANK_CHECK">
+      <extensionElements>
+        <activiti:taskListener event="create" delegateExpression="${bankCreateTask}"></activiti:taskListener>
+        <activiti:taskListener event="complete" delegateExpression="${bankCompleteTask}"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow51" sourceRef="usertask2" targetRef="CashierTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ isPass=='Y'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow53" sourceRef="exclusivegateway1" targetRef="usertask2">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ fundSource !='0' && isPass=='Y' && needUserWithdraw !='Y'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow54" sourceRef="usertask2" targetRef="rejectEnd">
+      <extensionElements>
+        <activiti:executionListener event="take" delegateExpression="${loanUnfreezeBalance}"></activiti:executionListener>
+        <activiti:executionListener event="take" delegateExpression="${loanUnfreezeCredit}"></activiti:executionListener>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ isPass=='N'}]]></conditionExpression>
+    </sequenceFlow>
+    <receiveTask id="WAIT_FOR_SIGN" name="等待用户签约"></receiveTask>
+    <sequenceFlow id="flow55" sourceRef="CustomerManagerTask" targetRef="WAIT_FOR_SIGN">
+      <extensionElements>
+        <activiti:executionListener event="take" delegateExpression="${createProductOrderListener}"></activiti:executionListener>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${isPass == 'Y' && needSignProductOrder}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow56" sourceRef="WAIT_FOR_SIGN" targetRef="RiskCheckTask">
+      <extensionElements>
+        <activiti:executionListener event="take" delegateExpression="${loanFreezeCredit}"></activiti:executionListener>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${signSuccess}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow57" sourceRef="WAIT_FOR_SIGN" targetRef="CustomerManagerTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!signSuccess}]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_loansBillProcess">
+    <bpmndi:BPMNPlane bpmnElement="loansBillProcess" id="BPMNPlane_loansBillProcess">
+      <bpmndi:BPMNShape bpmnElement="lbill_start" id="BPMNShape_lbill_start">
+        <omgdc:Bounds height="35.0" width="35.0" x="76.0" y="290.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="CustomerManagerTask" id="BPMNShape_CustomerManagerTask">
+        <omgdc:Bounds height="55.0" width="105.0" x="283.0" y="280.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endSuccess" id="BPMNShape_endSuccess">
+        <omgdc:Bounds height="35.0" width="35.0" x="2270.0" y="290.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="RiskCheckTask" id="BPMNShape_RiskCheckTask">
+        <omgdc:Bounds height="55.0" width="105.0" x="773.0" y="280.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="PledgeTask" id="BPMNShape_PledgeTask">
+        <omgdc:Bounds height="55.0" width="105.0" x="922.0" y="280.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="RiskAuditTask" id="BPMNShape_RiskAuditTask">
+        <omgdc:Bounds height="55.0" width="105.0" x="1078.0" y="280.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="FinanceTask" id="BPMNShape_FinanceTask">
+        <omgdc:Bounds height="55.0" width="105.0" x="1233.0" y="280.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="CashierTask" id="BPMNShape_CashierTask">
+        <omgdc:Bounds height="55.0" width="105.0" x="2100.0" y="280.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="SpeedModeCashierTask" id="BPMNShape_SpeedModeCashierTask">
+        <omgdc:Bounds height="55.0" width="105.0" x="1113.0" y="520.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="RiskAuditSpeedModeTask" id="BPMNShape_RiskAuditSpeedModeTask">
+        <omgdc:Bounds height="55.0" width="105.0" x="483.0" y="520.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="DistributionCashierTask" id="BPMNShape_DistributionCashierTask">
+        <omgdc:Bounds height="55.0" width="105.0" x="1003.0" y="723.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserWithdrawTask" id="BPMNShape_UserWithdrawTask">
+        <omgdc:Bounds height="55.0" width="105.0" x="1530.0" y="170.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="1473.0" y="287.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="rejectEnd" id="BPMNShape_rejectEnd">
+        <omgdc:Bounds height="35.0" width="35.0" x="1565.0" y="410.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="inclusivegateway1" id="BPMNShape_inclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="805.0" y="30.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-916F8478-F6BD-45C8-A3B6-668CD6D616E3" id="BPMNShape_sid-916F8478-F6BD-45C8-A3B6-668CD6D616E3">
+        <omgdc:Bounds height="35.0" width="35.0" x="1148.0" y="610.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-DBFE3813-F717-456A-8A94-B57CBEC44CE3" id="BPMNShape_sid-DBFE3813-F717-456A-8A94-B57CBEC44CE3">
+        <omgdc:Bounds height="40.0" width="40.0" x="175.0" y="287.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="TowLevelRiskCheckTask" id="BPMNShape_TowLevelRiskCheckTask">
+        <omgdc:Bounds height="55.0" width="105.0" x="480.0" y="700.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway2" id="BPMNShape_exclusivegateway2">
+        <omgdc:Bounds height="40.0" width="40.0" x="300.0" y="707.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="usertask1" id="BPMNShape_usertask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="760.0" y="850.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="usertask2" id="BPMNShape_usertask2">
+        <omgdc:Bounds height="55.0" width="105.0" x="1821.0" y="110.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="WAIT_FOR_SIGN" id="BPMNShape_WAIT_FOR_SIGN">
+        <omgdc:Bounds height="55.0" width="105.0" x="510.0" y="170.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow10" id="BPMNEdge_flow10">
+        <omgdi:waypoint x="1027.0" y="307.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1078.0" y="307.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="825.0" y="280.0"></omgdi:waypoint>
+        <omgdi:waypoint x="825.0" y="70.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="48.0" width="22.0" x="815.0" y="256.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow12" id="BPMNEdge_flow12">
+        <omgdi:waypoint x="1183.0" y="307.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1233.0" y="307.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow26" id="BPMNEdge_flow26">
+        <omgdi:waypoint x="588.0" y="547.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1113.0" y="547.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow29" id="BPMNEdge_flow29">
+        <omgdi:waypoint x="1165.0" y="520.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1165.0" y="461.0"></omgdi:waypoint>
+        <omgdi:waypoint x="535.0" y="461.0"></omgdi:waypoint>
+        <omgdi:waypoint x="535.0" y="520.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="878.0" y="307.0"></omgdi:waypoint>
+        <omgdi:waypoint x="922.0" y="307.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow24" id="BPMNEdge_flow24">
+        <omgdi:waypoint x="974.0" y="335.0"></omgdi:waypoint>
+        <omgdi:waypoint x="975.0" y="375.0"></omgdi:waypoint>
+        <omgdi:waypoint x="826.0" y="375.0"></omgdi:waypoint>
+        <omgdi:waypoint x="825.0" y="335.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow11" id="BPMNEdge_flow11">
+        <omgdi:waypoint x="1130.0" y="280.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1131.0" y="50.0"></omgdi:waypoint>
+        <omgdi:waypoint x="845.0" y="50.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow42" id="BPMNEdge_flow42">
+        <omgdi:waypoint x="1165.0" y="575.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1165.0" y="610.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow38" id="BPMNEdge_flow38">
+        <omgdi:waypoint x="1582.0" y="225.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2152.0" y="280.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="48.0" width="22.0" x="1582.0" y="225.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow30" id="BPMNEdge_flow30">
+        <omgdi:waypoint x="535.0" y="575.0"></omgdi:waypoint>
+        <omgdi:waypoint x="777.0" y="627.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1148.0" y="627.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow34" id="BPMNEdge_flow34">
+        <omgdi:waypoint x="1108.0" y="750.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2287.0" y="750.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2287.0" y="325.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow31" id="BPMNEdge_flow31">
+        <omgdi:waypoint x="388.0" y="307.0"></omgdi:waypoint>
+        <omgdi:waypoint x="773.0" y="307.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="48.0" width="22.0" x="388.0" y="307.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow41" id="BPMNEdge_flow41">
+        <omgdi:waypoint x="1108.0" y="750.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1166.0" y="727.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1165.0" y="645.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow40" id="BPMNEdge_flow40">
+        <omgdi:waypoint x="805.0" y="50.0"></omgdi:waypoint>
+        <omgdi:waypoint x="335.0" y="50.0"></omgdi:waypoint>
+        <omgdi:waypoint x="335.0" y="280.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="48.0" width="100.0" x="805.0" y="50.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="335.0" y="335.0"></omgdi:waypoint>
+        <omgdi:waypoint x="335.0" y="424.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1565.0" y="427.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="48.0" width="44.0" x="335.0" y="335.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow20" id="BPMNEdge_flow20">
+        <omgdi:waypoint x="2205.0" y="307.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2270.0" y="307.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="48.0" width="22.0" x="2205.0" y="307.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flowRejectByCashierToEnd" id="BPMNEdge_flowRejectByCashierToEnd">
+        <omgdi:waypoint x="2152.0" y="335.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2152.0" y="427.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1600.0" y="427.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="48.0" width="22.0" x="2155.0" y="369.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow37" id="BPMNEdge_flow37">
+        <omgdi:waypoint x="1582.0" y="225.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1582.0" y="410.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="48.0" width="22.0" x="1565.0" y="255.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flowRejectByCashierToCustMng" id="BPMNEdge_flowRejectByCashierToCustMng">
+        <omgdi:waypoint x="2152.0" y="280.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2152.0" y="49.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1497.0" y="14.0"></omgdi:waypoint>
+        <omgdi:waypoint x="825.0" y="30.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="48.0" width="77.0" x="2130.0" y="241.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow27" id="BPMNEdge_flow27">
+        <omgdi:waypoint x="1218.0" y="547.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2287.0" y="547.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2287.0" y="325.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow35" id="BPMNEdge_flow35">
+        <omgdi:waypoint x="1513.0" y="307.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2100.0" y="307.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow36" id="BPMNEdge_flow36">
+        <omgdi:waypoint x="1493.0" y="287.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1493.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1530.0" y="197.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flowFinancePass" id="BPMNEdge_flowFinancePass">
+        <omgdi:waypoint x="1338.0" y="307.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1473.0" y="307.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="48.0" width="22.0" x="1338.0" y="307.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flowFinanceReject" id="BPMNEdge_flowFinanceReject">
+        <omgdi:waypoint x="1285.0" y="280.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1285.0" y="50.0"></omgdi:waypoint>
+        <omgdi:waypoint x="845.0" y="50.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="48.0" width="22.0" x="1285.0" y="280.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-CB5AB689-2603-4D6D-8D55-B06D423ABEE0" id="BPMNEdge_sid-CB5AB689-2603-4D6D-8D55-B06D423ABEE0">
+        <omgdi:waypoint x="111.0" y="307.0"></omgdi:waypoint>
+        <omgdi:waypoint x="175.0" y="307.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow33" id="BPMNEdge_flow33">
+        <omgdi:waypoint x="195.0" y="327.0"></omgdi:waypoint>
+        <omgdi:waypoint x="195.0" y="727.0"></omgdi:waypoint>
+        <omgdi:waypoint x="300.0" y="727.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow25" id="BPMNEdge_flow25">
+        <omgdi:waypoint x="195.0" y="327.0"></omgdi:waypoint>
+        <omgdi:waypoint x="195.0" y="547.0"></omgdi:waypoint>
+        <omgdi:waypoint x="483.0" y="547.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="215.0" y="307.0"></omgdi:waypoint>
+        <omgdi:waypoint x="283.0" y="307.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="48.0" width="48.0" x="215.0" y="307.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow43" id="BPMNEdge_flow43">
+        <omgdi:waypoint x="585.0" y="727.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1003.0" y="750.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow44" id="BPMNEdge_flow44">
+        <omgdi:waypoint x="532.0" y="700.0"></omgdi:waypoint>
+        <omgdi:waypoint x="782.0" y="627.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1148.0" y="627.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="48.0" width="22.0" x="547.0" y="664.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow45" id="BPMNEdge_flow45">
+        <omgdi:waypoint x="340.0" y="727.0"></omgdi:waypoint>
+        <omgdi:waypoint x="480.0" y="727.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow46" id="BPMNEdge_flow46">
+        <omgdi:waypoint x="320.0" y="747.0"></omgdi:waypoint>
+        <omgdi:waypoint x="320.0" y="781.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1058.0" y="798.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1055.0" y="778.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow47" id="BPMNEdge_flow47">
+        <omgdi:waypoint x="532.0" y="755.0"></omgdi:waypoint>
+        <omgdi:waypoint x="812.0" y="850.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow48" id="BPMNEdge_flow48">
+        <omgdi:waypoint x="320.0" y="747.0"></omgdi:waypoint>
+        <omgdi:waypoint x="320.0" y="867.0"></omgdi:waypoint>
+        <omgdi:waypoint x="760.0" y="877.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow49" id="BPMNEdge_flow49">
+        <omgdi:waypoint x="865.0" y="877.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1055.0" y="876.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1055.0" y="778.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow50" id="BPMNEdge_flow50">
+        <omgdi:waypoint x="865.0" y="877.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1165.0" y="877.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1165.0" y="645.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow51" id="BPMNEdge_flow51">
+        <omgdi:waypoint x="1873.0" y="165.0"></omgdi:waypoint>
+        <omgdi:waypoint x="2152.0" y="280.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow53" id="BPMNEdge_flow53">
+        <omgdi:waypoint x="1493.0" y="287.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1493.0" y="137.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1821.0" y="137.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow54" id="BPMNEdge_flow54">
+        <omgdi:waypoint x="1873.0" y="165.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1582.0" y="410.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow55" id="BPMNEdge_flow55">
+        <omgdi:waypoint x="335.0" y="280.0"></omgdi:waypoint>
+        <omgdi:waypoint x="335.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="510.0" y="197.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow56" id="BPMNEdge_flow56">
+        <omgdi:waypoint x="562.0" y="225.0"></omgdi:waypoint>
+        <omgdi:waypoint x="825.0" y="280.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow57" id="BPMNEdge_flow57">
+        <omgdi:waypoint x="562.0" y="225.0"></omgdi:waypoint>
+        <omgdi:waypoint x="335.0" y="280.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
