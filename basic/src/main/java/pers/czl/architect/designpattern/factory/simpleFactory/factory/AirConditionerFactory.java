@@ -10,7 +10,7 @@ import pers.czl.architect.designpattern.factory.simpleFactory.product.IAirCondit
  **/
 public class AirConditionerFactory {
 
-    public static IAirConditioner product(String args) {
+    public static IAirConditioner produce(String args) {
         if ("haier".equals(args)) {
             return new HaierAirConditioner();
         } else if ("geli".equals(args)) {

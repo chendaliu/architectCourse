@@ -8,5 +8,5 @@ import pers.czl.architect.designpattern.factory.simpleFactory.product.IAirCondit
  **/
 public interface AirConditionerFactory {
 
-    IAirConditioner product();
+    IAirConditioner produce();
 }

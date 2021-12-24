@@ -10,7 +10,7 @@ import pers.czl.architect.designpattern.factory.simpleFactory.product.IAirCondit
 public class GeliAirConditionerFactory implements AirConditionerFactory {
 
     @Override
-    public IAirConditioner product() {
+    public IAirConditioner produce() {
         return new GeliAirConditioner();
     }
 }

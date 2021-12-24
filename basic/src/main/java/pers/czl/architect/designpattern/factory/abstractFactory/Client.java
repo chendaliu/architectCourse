@@ -1,5 +1,10 @@
 package pers.czl.architect.designpattern.factory.abstractFactory;
 
+import pers.czl.architect.designpattern.factory.abstractFactory.factory.GeliFactory;
+import pers.czl.architect.designpattern.factory.abstractFactory.factory.HaierFactory;
+import pers.czl.architect.designpattern.factory.abstractFactory.product.IAirConditioner;
+import pers.czl.architect.designpattern.factory.abstractFactory.product.IRefrigerator;
+
 /**
  * 抽象工厂
  *
@@ -12,4 +17,12 @@ package pers.czl.architect.designpattern.factory.abstractFactory;
  **/
 public class Client {
 
+    public static void main(String[] args) {
+        //生产格力空调
+        IAirConditioner haierAirConditioner = new HaierFactory().produceAirConditioner();
+        haierAirConditioner.work();
+
+        IRefrigerator geliRefrigerator = new GeliFactory().produceRefrigerator();
+        geliRefrigerator.work();
+    }
 }

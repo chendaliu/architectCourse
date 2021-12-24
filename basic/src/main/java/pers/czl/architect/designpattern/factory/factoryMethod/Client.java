@@ -17,10 +17,10 @@ import pers.czl.architect.designpattern.factory.simpleFactory.product.IAirCondit
 public class Client {
 
     public static void main(String[] args) {
-        IAirConditioner haier = new HaierAirConditionerFactory().product();
+        IAirConditioner haier = new HaierAirConditionerFactory().produce();
         haier.work();
 
-        IAirConditioner geli = new GeliAirConditionerFactory().product();
+        IAirConditioner geli = new GeliAirConditionerFactory().produce();
         geli.work();
     }
 }
