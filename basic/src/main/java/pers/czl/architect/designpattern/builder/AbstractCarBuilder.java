@@ -4,6 +4,8 @@ package pers.czl.architect.designpattern.builder;
  * 抽象建造者
  */
 public abstract class AbstractCarBuilder {
+    Car car = new Car();
+
     /**
      * 建造框架
      */
@@ -19,5 +21,7 @@ public abstract class AbstractCarBuilder {
      */
     abstract void buildTire();
 
-    abstract Car creatCar();
+    public Car creatCar() {
+        return car;
+    }
 }
