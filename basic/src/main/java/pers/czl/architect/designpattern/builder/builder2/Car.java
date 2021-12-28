@@ -1,4 +1,4 @@
-package pers.czl.architect.designpattern.builder;
+package pers.czl.architect.designpattern.builder.builder2;
 
 /**
  * 产品：汽车

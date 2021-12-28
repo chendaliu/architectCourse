@@ -1,4 +1,4 @@
-package pers.czl.architect.designpattern.builder;
+package pers.czl.architect.designpattern.builder.builder1;
 
 /**
  * 丰田汽车建造者

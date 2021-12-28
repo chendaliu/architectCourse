@@ -1,4 +1,4 @@
-package pers.czl.architect.designpattern.builder;
+package pers.czl.architect.designpattern.builder.builder1;
 
 /**
  * 建造者模式 <br/>
