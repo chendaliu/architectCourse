@@ -1,4 +1,6 @@
-package pers.czl.architect.designpattern.decorate;
+package pers.czl.architect.designpattern.decorate.component;
+
+import pers.czl.architect.designpattern.decorate.component.AbstractComponent;
 
 /**
  * @Title:

@@ -1,4 +1,4 @@
-package pers.czl.architect.designpattern.decorate;
+package pers.czl.architect.designpattern.decorate.component;
 
 /**
  * @Title: 抽象组件
