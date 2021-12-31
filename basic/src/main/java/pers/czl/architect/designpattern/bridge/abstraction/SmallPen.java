@@ -1,4 +1,6 @@
-package pers.czl.architect.designpattern.bridge;
+package pers.czl.architect.designpattern.bridge.abstraction;
+
+import pers.czl.architect.designpattern.bridge.implementor.Color;
 
 /**
  * @Title:

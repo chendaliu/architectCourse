@@ -1,4 +1,4 @@
-package pers.czl.architect.designpattern.bridge;
+package pers.czl.architect.designpattern.bridge.abstraction;
 
 /**
  * @Title:
