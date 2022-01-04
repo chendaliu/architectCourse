@@ -1,8 +1,13 @@
 package pers.czl.architect.designpattern.flyweight.base;
 
 /**
- * @Title: 享元模式。
- * @Description: 角色：抽象享元类，具体享元类，非共享具体享元类，享元工厂。用于需要创建很多相同或类似的对象的场景，例如数据库连接池
+ * 享元模式。
+ * 角色：
+ * 抽象享元类，
+ * 具体享元类，
+ * 非共享具体享元类，
+ * 享元工厂。
+ * 用于需要创建很多相同或类似的对象的场景，例如数据库连接池
  * @Author: wb-ccl670938
  * @CreateTime: 2020-09-17 16:35
  * @Version:1.0
