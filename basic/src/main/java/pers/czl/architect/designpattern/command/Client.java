@@ -4,7 +4,6 @@ import pers.czl.architect.designpattern.command.command.CloseCommand;
 import pers.czl.architect.designpattern.command.command.Command;
 import pers.czl.architect.designpattern.command.command.OpenCommand;
 import pers.czl.architect.designpattern.command.invoker.Button;
-import pers.czl.architect.designpattern.command.reviever.OpenHandle;
 
 /**
  * 命令模式
