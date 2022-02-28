@@ -17,11 +17,11 @@ public class ByHouseProxy implements BuyHouse {
 
     @Override
     public void buyHouse() {
+        this.agent();
         buyHouse.buyHouse();
-        this.decorate();
     }
 
-    private void decorate() {
-        System.out.println("装修房子");
+    private void agent() {
+        System.out.println("找中介");
     }
 }
