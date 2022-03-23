@@ -11,9 +11,8 @@ package pers.czl.architect.designpattern.proxy;
 public class Client {
 
     public static void main(String[] args) {
-        BuyHouse buyHouse = new BuyHouseImpl();
-
-        ByHouseProxy proxy = new ByHouseProxy(buyHouse);
-        proxy.buyHouse();
+        Station station = new Station();
+        StationProxy stationProxy = new StationProxy(station);
+        stationProxy.sellTicket();
     }
 }
