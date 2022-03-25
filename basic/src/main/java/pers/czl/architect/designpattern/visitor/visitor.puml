@@ -1,0 +1,51 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+'访问者
+interface Selection {
+    +void visit(Teacher teacher)
+    +void visit(Student student)
+}
+Class ScientificResearchAwardSelection{
+    +void visit(Teacher teacher)
+    +void visit(Student student)
+}
+Class OutstandingAchievementAwardSelection{
+    +void visit(Teacher teacher)
+    +void visit(Student student)
+}
+
+Selection <|-- ScientificResearchAwardSelection
+Selection <|-- OutstandingAchievementAwardSelection
+
+
+'元素
+abstract Member {
+    private String name;
+    abstract void accept(Selection selection);
+}
+Class Teacher {
+    -Integer numberOfPapers
+    -Integer feedbackScore
+}
+Class Student {
+    -Integer numberOfPapers
+    -Integer avgScore
+}
+
+Member <|.. Teacher
+Member <|.. Student
+
+'对象结构
+Class MemberList {
+    private List<Member> members
+    public void addMember(Member member)
+    public void accept(Selection selection)
+}
+
+MemberList o-- Member
+
+Class Client
+Selection <.. Client
+Member <.. Client
+@enduml
