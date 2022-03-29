@@ -1,7 +1,7 @@
 package pers.czl.architect.designpattern.dynamicProxy.cglib;
 
 import net.sf.cglib.proxy.Enhancer;
-import org.springframework.cglib.core.DebuggingClassWriter;
+import pers.czl.architect.designpattern.dynamicProxy.jdk.ProxyUtils;
 
 /**
  * @author: daliu
@@ -10,9 +10,6 @@ import org.springframework.cglib.core.DebuggingClassWriter;
 public class Client {
 
     public static void main(String[] args) {
-        // 指定 CGLIB 将动态生成的代理类保存至指定的磁盘路径下
-        System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY, "D:\\workSpace\\architectCourse\\basic\\src\\main\\java\\pers");
-
         Programmer progammer = new Programmer();
 
         Hacker hacker = new Hacker();
@@ -25,6 +22,8 @@ public class Client {
         Programmer proxyProgrammer = (Programmer) enhancer.create();
 
         proxyProgrammer.code();
+
+        ProxyUtils.generateClassFile(proxyProgrammer.getClass(), "ProgrammerProxy");
     }
 
 }
