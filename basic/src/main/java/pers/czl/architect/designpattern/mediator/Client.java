@@ -6,6 +6,8 @@ import pers.czl.architect.designpattern.mediator.colleague.MysqlDatabase;
 import pers.czl.architect.designpattern.mediator.colleague.RedisDatabase;
 import pers.czl.architect.designpattern.mediator.mediator.Mediator;
 
+import java.util.Arrays;
+
 /**
  * 中介者模式，又叫调停者模式
  * 多个同事类相互协作的时候，这些同事类相互调用链就像蜘蛛网，耦合性非常强。
@@ -29,13 +31,11 @@ public class Client {
         AbstractDatabase mysqlDatabase = new MysqlDatabase(mediator);
         AbstractDatabase esDatabase = new EsDatabase(mediator);
         AbstractDatabase redisDatabase = new RedisDatabase(mediator);
-        mediator.regist(mysqlDatabase);
-        mediator.regist(esDatabase);
-        mediator.regist(redisDatabase);
+        mediator.regist(Arrays.asList(mysqlDatabase, esDatabase, redisDatabase));
 
         //mysqlDatabase.add("我是mysql添加的数据");
-        esDatabase.add("我是es添加的数据");
-        //redisDatabase.add("我是redis添加的数据");
+        //esDatabase.add("我是es添加的数据");
+        redisDatabase.add("我是redis添加的数据");
 
         mediator.showDatas();
 

@@ -20,6 +20,10 @@ public abstract class AbstractMediator {
         this.databaseList.add(abstractDatabase);
     }
 
+    public void regist(List<AbstractDatabase> abstractDatabaseList) {
+        this.databaseList.addAll(abstractDatabaseList);
+    }
+
     public void showDatas() {
         this.databaseList.forEach(db -> {
             System.out.print(db.getClass() + ":");
