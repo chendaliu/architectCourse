@@ -16,7 +16,7 @@ public class Client {
     public static void main(String[] args) {
         int extrinsic = 22;
 
-        AbstractFlyweight flyweightX = FlyweightFactory.getInstance().getInstance().getFlyweight("X");
+        AbstractFlyweight flyweightX = FlyweightFactory.getInstance().getFlyweight("X");
         flyweightX.operate(++extrinsic);
 
         AbstractFlyweight flyweightY = FlyweightFactory.getInstance().getFlyweight("Y");
