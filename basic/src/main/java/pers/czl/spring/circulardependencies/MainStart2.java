@@ -1,17 +1,12 @@
 package pers.czl.spring.circulardependencies;
 
 
-import com.sun.javafx.logging.PulseLogger;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 
 import java.lang.reflect.Field;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /***

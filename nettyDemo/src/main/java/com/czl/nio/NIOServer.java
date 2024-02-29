@@ -61,7 +61,7 @@ public class NIOServer {
             SocketChannel sc = ssc.accept();
             sc.configureBlocking(false);
             //通过Selector监听Channel时对读事件感兴趣
-            sc.register(key.selector(), SelectionKey.OP_READ);
+            sc.register(key.selector(), SelectionKey.OP_READ) ;
         } else if (key.isReadable()) {
             System.out.println("有客户端数据可读事件发生了。。");
             SocketChannel sc = (SocketChannel) key.channel();

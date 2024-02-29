@@ -8,6 +8,8 @@ import org.springframework.context.annotation.FilterType;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Stack;
+import java.util.concurrent.ArrayBlockingQueue;
 
 @SpringBootApplication
 @ComponentScan(excludeFilters =
@@ -16,11 +18,11 @@ import java.util.Arrays;
         })
 public class ArchitectCourseApplication { //extends SpringBootServletInitializer {
 
-    public static void main(String[] args) throws SQLException {
+  /*  public static void main(String[] args) throws SQLException {
 
         SpringApplication.run(ArchitectCourseApplication.class);
     }
-
+*/
    /* @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(ArchitectCourseApplication.class);

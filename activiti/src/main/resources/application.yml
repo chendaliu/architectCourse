@@ -4,14 +4,14 @@ server:
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://192.168.32.128:3307/activiti?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&nullCatalogMeansCurrent=true
-    username: root
+    url: jdbc:mysql://192.168.66.131:3306/activiti?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&nullCatalogMeansCurrent=true
+    username: admin
     password: 123456
 
   # activiti default configuration
   activiti:
     #启动的时候是否去创建表，如果第一次启动这里必须设置为true
-    database-schema-update: false
+    database-schema-update: true
     #是否部署resources/processes文件夹下面的所有资源文件
     check-process-definitions: false
     process-definition-location-prefix: classpath:processes/

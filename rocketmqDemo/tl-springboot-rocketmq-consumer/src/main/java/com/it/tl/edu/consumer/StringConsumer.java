@@ -25,7 +25,7 @@ public class StringConsumer implements RocketMQListener<String>, RocketMQPushCon
     @Override
     public void prepareStart(DefaultMQPushConsumer consumer) {
         //设置消费其实位置&消费时间点位
-        //consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_TIMESTAMP);
-        //consumer.setConsumeTimestamp(UtilAll.timeMillisToHumanString3(System.currentTimeMillis()));
+        consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_TIMESTAMP);
+        consumer.setConsumeTimestamp(UtilAll.timeMillisToHumanString3(System.currentTimeMillis()));
     }
 }

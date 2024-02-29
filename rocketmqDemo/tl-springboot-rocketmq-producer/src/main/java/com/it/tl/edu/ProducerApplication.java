@@ -50,34 +50,33 @@ public class ProducerApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // 发送字符串
-        /*SendResult sendResult = rocketMQTemplate.syncSend(springTopic, "Hello, World!");
+        SendResult sendResult = rocketMQTemplate.syncSend(springTopic, "Hello, World!");
         System.out.printf("syncSend1 to topic %s sendResult=%s %n", springTopic, sendResult);
-        */
         // 使用自定义的templete
-        /*sendResult = extRocketMQTemplate.syncSend(springTopic, "自定义的templete发送");
+        sendResult = extRocketMQTemplate.syncSend(springTopic, "自定义的templete发送");
         System.out.printf("extRocketMQTemplate.syncSend1 to topic %s sendResult=%s %n", springTopic, sendResult);
-        */
         // 发送 spring Message,本质也是发送字符串
-        /*sendResult = rocketMQTemplate.syncSend(springTopic, MessageBuilder.withPayload("tl rocketmq msg test").build());
+        sendResult = rocketMQTemplate.syncSend(springTopic, MessageBuilder.withPayload("tl rocketmq msg test").build());
         System.out.printf("syncSend2 to topic %s sendResult=%s %n", springTopic, sendResult);
-        */
         // 发送自定义对象-Dto
-        /*rocketMQTemplate.asyncSend(orderPaymentTopic, new OrderPaymentDto(10102303, new BigDecimal("88.00")), new SendCallback() {
+        rocketMQTemplate.asyncSend(orderPaymentTopic, new OrderPaymentDto(10102303, new BigDecimal("88.00")), new SendCallback() {
+            @Override
             public void onSuccess(SendResult var1) {
                 System.out.printf("async onSucess SendResult=%s %n", var1);
             }
 
+            @Override
             public void onException(Throwable var1) {
                 System.out.printf("async onException Throwable=%s %n", var1);
             }
 
-        });*/
+        });
 
         // 发送指定Tag的msg
-        /*rocketMQTemplate.convertAndSend(msgExtTopic + ":tag0", "I'm from tag0");
+        rocketMQTemplate.convertAndSend(msgExtTopic + ":tag0", "I'm from tag0");
         System.out.printf("syncSend topic %s tag %s %n", msgExtTopic, "tag0");
         rocketMQTemplate.convertAndSend(msgExtTopic + ":tag1", "I'm from tag1");
-        System.out.printf("syncSend topic %s tag %s %n", msgExtTopic, "tag1");*/
+        System.out.printf("syncSend topic %s tag %s %n", msgExtTopic, "tag1");
 
 
         // 批量发送字符消息
